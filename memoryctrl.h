@@ -37,6 +37,7 @@
 //#include "io.h"
 #include "array.h"
 //#include "Undifferentiated_Core_Area.h"
+#include "logic.h"
 #include <vector>
 #include "basic_components.h"
 
