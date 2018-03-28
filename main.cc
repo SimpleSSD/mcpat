@@ -78,6 +78,7 @@ int main(int argc, char *argv[]) {
   ParseXML *p1 = new ParseXML();
   p1->parse(fb);
   Processor proc(p1);
+  proc.compute();
   proc.displayEnergy(2, plevel);
   delete p1;
   return 0;

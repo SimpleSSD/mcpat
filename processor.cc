@@ -28,7 +28,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.”
  *
  ***************************************************************************/
-#include "processor.h"
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
@@ -41,6 +40,7 @@
 #include "basic_circuit.h"
 #include "const.h"
 #include "parameter.h"
+#include "processor.h"
 #include "version.h"
 
 Processor::Processor(ParseXML *XML_interface)
@@ -56,7 +56,6 @@ Processor::Processor(ParseXML *XML_interface)
    * controllers.
    */
   int i;
-  double pppm_t[4] = {1, 1, 1, 1};
   set_proc_param();
   if (procdynp.homoCore)
     numCore = procdynp.numCore == 0 ? 0 : 1;
@@ -101,24 +100,14 @@ Processor::Processor(ParseXML *XML_interface)
 
   for (i = 0; i < numCore; i++) {
     cores.push_back(new Core(XML, i, &interface_ip));
-    cores[i]->computeEnergy();
-    cores[i]->computeEnergy(false);
     if (procdynp.homoCore) {
       core.area.set_area(core.area.get_area() +
                          cores[i]->area.get_area() * procdynp.numCore);
-      set_pppm(pppm_t, cores[i]->clockRate * procdynp.numCore, procdynp.numCore,
-               procdynp.numCore, procdynp.numCore);
-      core.power = core.power + cores[i]->power * pppm_t;
-      set_pppm(pppm_t, 1 / cores[i]->executionTime, procdynp.numCore,
-               procdynp.numCore, procdynp.numCore);
-      core.rt_power = core.rt_power + cores[i]->rt_power * pppm_t;
       area.set_area(
           area.get_area() +
           core.area.get_area());  // placement and routing overhead is
                                   // 10%, core scales worse than cache
                                   // 40% is accumulated from 90 to 22nm
-      power = power + core.power;
-      rt_power = rt_power + core.rt_power;
     }
     else {
       core.area.set_area(core.area.get_area() + cores[i]->area.get_area());
@@ -127,14 +116,6 @@ Processor::Processor(ParseXML *XML_interface)
                                                  // overhead is 10%, core scales
                                                  // worse than cache 40% is
                                                  // accumulated from 90 to 22nm
-
-      set_pppm(pppm_t, cores[i]->clockRate, 1, 1, 1);
-      core.power = core.power + cores[i]->power * pppm_t;
-      power = power + cores[i]->power * pppm_t;
-
-      set_pppm(pppm_t, 1 / cores[i]->executionTime, 1, 1, 1);
-      core.rt_power = core.rt_power + cores[i]->rt_power * pppm_t;
-      rt_power = rt_power + cores[i]->rt_power * pppm_t;
     }
   }
 
@@ -142,25 +123,15 @@ Processor::Processor(ParseXML *XML_interface)
     if (numL2 > 0)
       for (i = 0; i < numL2; i++) {
         l2array.push_back(new SharedCache(XML, i, &interface_ip));
-        l2array[i]->computeEnergy();
-        l2array[i]->computeEnergy(false);
         if (procdynp.homoL2) {
           l2.area.set_area(l2.area.get_area() +
                            l2array[i]->area.get_area() * procdynp.numL2);
-          set_pppm(pppm_t, l2array[i]->cachep.clockRate * procdynp.numL2,
-                   procdynp.numL2, procdynp.numL2, procdynp.numL2);
-          l2.power = l2.power + l2array[i]->power * pppm_t;
-          set_pppm(pppm_t, 1 / l2array[i]->cachep.executionTime, procdynp.numL2,
-                   procdynp.numL2, procdynp.numL2);
-          l2.rt_power = l2.rt_power + l2array[i]->rt_power * pppm_t;
           area.set_area(
               area.get_area() +
               l2.area.get_area());  // placement and routing overhead
                                     // is 10%, l2 scales worse than
                                     // cache 40% is accumulated from 90
                                     // to 22nm
-          power = power + l2.power;
-          rt_power = rt_power + l2.rt_power;
         }
         else {
           l2.area.set_area(l2.area.get_area() + l2array[i]->area.get_area());
@@ -171,14 +142,6 @@ Processor::Processor(ParseXML *XML_interface)
                                              // scales worse than cache
                                              // 40% is accumulated from
                                              // 90 to 22nm
-
-          set_pppm(pppm_t, l2array[i]->cachep.clockRate, 1, 1, 1);
-          l2.power = l2.power + l2array[i]->power * pppm_t;
-          power = power + l2array[i]->power * pppm_t;
-          ;
-          set_pppm(pppm_t, 1 / l2array[i]->cachep.executionTime, 1, 1, 1);
-          l2.rt_power = l2.rt_power + l2array[i]->rt_power * pppm_t;
-          rt_power = rt_power + l2array[i]->rt_power * pppm_t;
         }
       }
   }
@@ -186,24 +149,14 @@ Processor::Processor(ParseXML *XML_interface)
   if (numL3 > 0)
     for (i = 0; i < numL3; i++) {
       l3array.push_back(new SharedCache(XML, i, &interface_ip, L3));
-      l3array[i]->computeEnergy();
-      l3array[i]->computeEnergy(false);
       if (procdynp.homoL3) {
         l3.area.set_area(l3.area.get_area() +
                          l3array[i]->area.get_area() * procdynp.numL3);
-        set_pppm(pppm_t, l3array[i]->cachep.clockRate * procdynp.numL3,
-                 procdynp.numL3, procdynp.numL3, procdynp.numL3);
-        l3.power = l3.power + l3array[i]->power * pppm_t;
-        set_pppm(pppm_t, 1 / l3array[i]->cachep.executionTime, procdynp.numL3,
-                 procdynp.numL3, procdynp.numL3);
-        l3.rt_power = l3.rt_power + l3array[i]->rt_power * pppm_t;
         area.set_area(
             area.get_area() +
             l3.area.get_area());  // placement and routing overhead is
                                   // 10%, l3 scales worse than cache
                                   // 40% is accumulated from 90 to 22nm
-        power = power + l3.power;
-        rt_power = rt_power + l3.rt_power;
       }
       else {
         l3.area.set_area(l3.area.get_area() + l3array[i]->area.get_area());
@@ -213,28 +166,14 @@ Processor::Processor(ParseXML *XML_interface)
                                                      // scales worse than cache
                                                      // 40% is accumulated from
                                                      // 90 to 22nm
-        set_pppm(pppm_t, l3array[i]->cachep.clockRate, 1, 1, 1);
-        l3.power = l3.power + l3array[i]->power * pppm_t;
-        power = power + l3array[i]->power * pppm_t;
-        set_pppm(pppm_t, 1 / l3array[i]->cachep.executionTime, 1, 1, 1);
-        l3.rt_power = l3.rt_power + l3array[i]->rt_power * pppm_t;
-        rt_power = rt_power + l3array[i]->rt_power * pppm_t;
       }
     }
   if (numL1Dir > 0)
     for (i = 0; i < numL1Dir; i++) {
       l1dirarray.push_back(new SharedCache(XML, i, &interface_ip, L1Directory));
-      l1dirarray[i]->computeEnergy();
-      l1dirarray[i]->computeEnergy(false);
       if (procdynp.homoL1Dir) {
         l1dir.area.set_area(l1dir.area.get_area() +
                             l1dirarray[i]->area.get_area() * procdynp.numL1Dir);
-        set_pppm(pppm_t, l1dirarray[i]->cachep.clockRate * procdynp.numL1Dir,
-                 procdynp.numL1Dir, procdynp.numL1Dir, procdynp.numL1Dir);
-        l1dir.power = l1dir.power + l1dirarray[i]->power * pppm_t;
-        set_pppm(pppm_t, 1 / l1dirarray[i]->cachep.executionTime,
-                 procdynp.numL1Dir, procdynp.numL1Dir, procdynp.numL1Dir);
-        l1dir.rt_power = l1dir.rt_power + l1dirarray[i]->rt_power * pppm_t;
         area.set_area(
             area.get_area() +
             l1dir.area.get_area());  // placement and routing overhead
@@ -248,126 +187,61 @@ Processor::Processor(ParseXML *XML_interface)
         l1dir.area.set_area(l1dir.area.get_area() +
                             l1dirarray[i]->area.get_area());
         area.set_area(area.get_area() + l1dirarray[i]->area.get_area());
-        set_pppm(pppm_t, l1dirarray[i]->cachep.clockRate, 1, 1, 1);
-        l1dir.power = l1dir.power + l1dirarray[i]->power * pppm_t;
-        power = power + l1dirarray[i]->power;
-        set_pppm(pppm_t, 1 / l1dirarray[i]->cachep.executionTime, 1, 1, 1);
-        l1dir.rt_power = l1dir.rt_power + l1dirarray[i]->rt_power * pppm_t;
-        rt_power = rt_power + l1dirarray[i]->rt_power;
       }
     }
 
   if (numL2Dir > 0)
     for (i = 0; i < numL2Dir; i++) {
       l2dirarray.push_back(new SharedCache(XML, i, &interface_ip, L2Directory));
-      l2dirarray[i]->computeEnergy();
-      l2dirarray[i]->computeEnergy(false);
       if (procdynp.homoL2Dir) {
         l2dir.area.set_area(l2dir.area.get_area() +
                             l2dirarray[i]->area.get_area() * procdynp.numL2Dir);
-        set_pppm(pppm_t, l2dirarray[i]->cachep.clockRate * procdynp.numL2Dir,
-                 procdynp.numL2Dir, procdynp.numL2Dir, procdynp.numL2Dir);
-        l2dir.power = l2dir.power + l2dirarray[i]->power * pppm_t;
-        set_pppm(pppm_t, 1 / l2dirarray[i]->cachep.executionTime,
-                 procdynp.numL2Dir, procdynp.numL2Dir, procdynp.numL2Dir);
-        l2dir.rt_power = l2dir.rt_power + l2dirarray[i]->rt_power * pppm_t;
         area.set_area(
             area.get_area() +
             l2dir.area.get_area());  // placement and routing overhead
                                      // is 10%, l2dir scales worse than
                                      // cache 40% is accumulated from
                                      // 90 to 22nm
-        power = power + l2dir.power;
-        rt_power = rt_power + l2dir.rt_power;
       }
       else {
         l2dir.area.set_area(l2dir.area.get_area() +
                             l2dirarray[i]->area.get_area());
         area.set_area(area.get_area() + l2dirarray[i]->area.get_area());
-        set_pppm(pppm_t, l2dirarray[i]->cachep.clockRate, 1, 1, 1);
-        l2dir.power = l2dir.power + l2dirarray[i]->power * pppm_t;
-        power = power + l2dirarray[i]->power * pppm_t;
-        set_pppm(pppm_t, 1 / l2dirarray[i]->cachep.executionTime, 1, 1, 1);
-        l2dir.rt_power = l2dir.rt_power + l2dirarray[i]->rt_power * pppm_t;
-        rt_power = rt_power + l2dirarray[i]->rt_power * pppm_t;
       }
     }
 
   if (XML->sys.mc.number_mcs > 0 && XML->sys.mc.memory_channels_per_mc > 0) {
     mc = new MemoryController(XML, &interface_ip, MC);
-    mc->computeEnergy();
-    mc->computeEnergy(false);
     mcs.area.set_area(mcs.area.get_area() +
                       mc->area.get_area() * XML->sys.mc.number_mcs);
     area.set_area(area.get_area() +
                   mc->area.get_area() * XML->sys.mc.number_mcs);
-    set_pppm(pppm_t, XML->sys.mc.number_mcs * mc->mcp.clockRate,
-             XML->sys.mc.number_mcs, XML->sys.mc.number_mcs,
-             XML->sys.mc.number_mcs);
-    mcs.power = mc->power * pppm_t;
-    power = power + mcs.power;
-    set_pppm(pppm_t, 1 / mc->mcp.executionTime, XML->sys.mc.number_mcs,
-             XML->sys.mc.number_mcs, XML->sys.mc.number_mcs);
-    mcs.rt_power = mc->rt_power * pppm_t;
-    rt_power = rt_power + mcs.rt_power;
   }
 
   if (XML->sys.flashc.number_mcs > 0)  // flash controller
   {
     flashcontroller = new FlashController(XML, &interface_ip);
-    flashcontroller->computeEnergy();
-    flashcontroller->computeEnergy(false);
     double number_fcs = flashcontroller->fcp.num_mcs;
     flashcontrollers.area.set_area(flashcontrollers.area.get_area() +
                                    flashcontroller->area.get_area() *
                                        number_fcs);
     area.set_area(area.get_area() + flashcontrollers.area.get_area());
-    set_pppm(pppm_t, number_fcs, number_fcs, number_fcs, number_fcs);
-    flashcontrollers.power = flashcontroller->power * pppm_t;
-    power = power + flashcontrollers.power;
-    set_pppm(pppm_t, number_fcs, number_fcs, number_fcs, number_fcs);
-    flashcontrollers.rt_power = flashcontroller->rt_power * pppm_t;
-    rt_power = rt_power + flashcontrollers.rt_power;
   }
 
   if (XML->sys.niu.number_units > 0) {
     niu = new NIUController(XML, &interface_ip);
-    niu->computeEnergy();
-    niu->computeEnergy(false);
     nius.area.set_area(nius.area.get_area() +
                        niu->area.get_area() * XML->sys.niu.number_units);
     area.set_area(area.get_area() +
                   niu->area.get_area() * XML->sys.niu.number_units);
-    set_pppm(pppm_t, XML->sys.niu.number_units * niu->niup.clockRate,
-             XML->sys.niu.number_units, XML->sys.niu.number_units,
-             XML->sys.niu.number_units);
-    nius.power = niu->power * pppm_t;
-    power = power + nius.power;
-    set_pppm(pppm_t, XML->sys.niu.number_units * niu->niup.clockRate,
-             XML->sys.niu.number_units, XML->sys.niu.number_units,
-             XML->sys.niu.number_units);
-    nius.rt_power = niu->rt_power * pppm_t;
-    rt_power = rt_power + nius.rt_power;
   }
 
   if (XML->sys.pcie.number_units > 0 && XML->sys.pcie.num_channels > 0) {
     pcie = new PCIeController(XML, &interface_ip);
-    pcie->computeEnergy();
-    pcie->computeEnergy(false);
     pcies.area.set_area(pcies.area.get_area() +
                         pcie->area.get_area() * XML->sys.pcie.number_units);
     area.set_area(area.get_area() +
                   pcie->area.get_area() * XML->sys.pcie.number_units);
-    set_pppm(pppm_t, XML->sys.pcie.number_units * pcie->pciep.clockRate,
-             XML->sys.pcie.number_units, XML->sys.pcie.number_units,
-             XML->sys.pcie.number_units);
-    pcies.power = pcie->power * pppm_t;
-    power = power + pcies.power;
-    set_pppm(pppm_t, XML->sys.pcie.number_units * pcie->pciep.clockRate,
-             XML->sys.pcie.number_units, XML->sys.pcie.number_units,
-             XML->sys.pcie.number_units);
-    pcies.rt_power = pcie->rt_power * pppm_t;
-    rt_power = rt_power + pcies.rt_power;
   }
 
   if (numNOC > 0) {
@@ -429,6 +303,201 @@ Processor::Processor(ParseXML *XML_interface)
         }
       }
     }
+  }
+
+  //  //clock power
+  //  globalClock.init_wire_external(is_default, &interface_ip);
+  //  globalClock.clk_area           =area*1e6; //change it from mm^2 to um^2
+  //  globalClock.end_wiring_level   =5;//toplevel metal
+  //  globalClock.start_wiring_level =5;//toplevel metal
+  //  globalClock.l_ip.with_clock_grid=false;//global clock does not drive local
+  //  final nodes globalClock.optimize_wire();
+}
+
+void Processor::compute() {
+  int i;
+  double pppm_t[4] = {1, 1, 1, 1};
+
+  for (i = 0; i < numCore; i++) {
+    cores[i]->computeEnergy();
+    cores[i]->computeEnergy(false);
+    if (procdynp.homoCore) {
+      set_pppm(pppm_t, cores[i]->clockRate * procdynp.numCore, procdynp.numCore,
+               procdynp.numCore, procdynp.numCore);
+      core.power = core.power + cores[i]->power * pppm_t;
+      set_pppm(pppm_t, 1 / cores[i]->executionTime, procdynp.numCore,
+               procdynp.numCore, procdynp.numCore);
+      core.rt_power = core.rt_power + cores[i]->rt_power * pppm_t;
+      power = power + core.power;
+      rt_power = rt_power + core.rt_power;
+    }
+    else {
+      set_pppm(pppm_t, cores[i]->clockRate, 1, 1, 1);
+      core.power = core.power + cores[i]->power * pppm_t;
+      power = power + cores[i]->power * pppm_t;
+
+      set_pppm(pppm_t, 1 / cores[i]->executionTime, 1, 1, 1);
+      core.rt_power = core.rt_power + cores[i]->rt_power * pppm_t;
+      rt_power = rt_power + cores[i]->rt_power * pppm_t;
+    }
+  }
+
+  if (!XML->sys.Private_L2) {
+    if (numL2 > 0)
+      for (i = 0; i < numL2; i++) {
+        l2array[i]->computeEnergy();
+        l2array[i]->computeEnergy(false);
+        if (procdynp.homoL2) {
+          set_pppm(pppm_t, l2array[i]->cachep.clockRate * procdynp.numL2,
+                   procdynp.numL2, procdynp.numL2, procdynp.numL2);
+          l2.power = l2.power + l2array[i]->power * pppm_t;
+          set_pppm(pppm_t, 1 / l2array[i]->cachep.executionTime, procdynp.numL2,
+                   procdynp.numL2, procdynp.numL2);
+          l2.rt_power = l2.rt_power + l2array[i]->rt_power * pppm_t;
+          power = power + l2.power;
+          rt_power = rt_power + l2.rt_power;
+        }
+        else {
+          set_pppm(pppm_t, l2array[i]->cachep.clockRate, 1, 1, 1);
+          l2.power = l2.power + l2array[i]->power * pppm_t;
+          power = power + l2array[i]->power * pppm_t;
+          ;
+          set_pppm(pppm_t, 1 / l2array[i]->cachep.executionTime, 1, 1, 1);
+          l2.rt_power = l2.rt_power + l2array[i]->rt_power * pppm_t;
+          rt_power = rt_power + l2array[i]->rt_power * pppm_t;
+        }
+      }
+  }
+
+  if (numL3 > 0)
+    for (i = 0; i < numL3; i++) {
+      l3array[i]->computeEnergy();
+      l3array[i]->computeEnergy(false);
+      if (procdynp.homoL3) {
+        set_pppm(pppm_t, l3array[i]->cachep.clockRate * procdynp.numL3,
+                 procdynp.numL3, procdynp.numL3, procdynp.numL3);
+        l3.power = l3.power + l3array[i]->power * pppm_t;
+        set_pppm(pppm_t, 1 / l3array[i]->cachep.executionTime, procdynp.numL3,
+                 procdynp.numL3, procdynp.numL3);
+        l3.rt_power = l3.rt_power + l3array[i]->rt_power * pppm_t;
+        power = power + l3.power;
+        rt_power = rt_power + l3.rt_power;
+      }
+      else {
+        set_pppm(pppm_t, l3array[i]->cachep.clockRate, 1, 1, 1);
+        l3.power = l3.power + l3array[i]->power * pppm_t;
+        power = power + l3array[i]->power * pppm_t;
+        set_pppm(pppm_t, 1 / l3array[i]->cachep.executionTime, 1, 1, 1);
+        l3.rt_power = l3.rt_power + l3array[i]->rt_power * pppm_t;
+        rt_power = rt_power + l3array[i]->rt_power * pppm_t;
+      }
+    }
+  if (numL1Dir > 0)
+    for (i = 0; i < numL1Dir; i++) {
+      l1dirarray[i]->computeEnergy();
+      l1dirarray[i]->computeEnergy(false);
+      if (procdynp.homoL1Dir) {
+        set_pppm(pppm_t, l1dirarray[i]->cachep.clockRate * procdynp.numL1Dir,
+                 procdynp.numL1Dir, procdynp.numL1Dir, procdynp.numL1Dir);
+        l1dir.power = l1dir.power + l1dirarray[i]->power * pppm_t;
+        set_pppm(pppm_t, 1 / l1dirarray[i]->cachep.executionTime,
+                 procdynp.numL1Dir, procdynp.numL1Dir, procdynp.numL1Dir);
+        l1dir.rt_power = l1dir.rt_power + l1dirarray[i]->rt_power * pppm_t;
+        power = power + l1dir.power;
+        rt_power = rt_power + l1dir.rt_power;
+      }
+      else {
+        set_pppm(pppm_t, l1dirarray[i]->cachep.clockRate, 1, 1, 1);
+        l1dir.power = l1dir.power + l1dirarray[i]->power * pppm_t;
+        power = power + l1dirarray[i]->power;
+        set_pppm(pppm_t, 1 / l1dirarray[i]->cachep.executionTime, 1, 1, 1);
+        l1dir.rt_power = l1dir.rt_power + l1dirarray[i]->rt_power * pppm_t;
+        rt_power = rt_power + l1dirarray[i]->rt_power;
+      }
+    }
+
+  if (numL2Dir > 0)
+    for (i = 0; i < numL2Dir; i++) {
+      l2dirarray[i]->computeEnergy();
+      l2dirarray[i]->computeEnergy(false);
+      if (procdynp.homoL2Dir) {
+        set_pppm(pppm_t, l2dirarray[i]->cachep.clockRate * procdynp.numL2Dir,
+                 procdynp.numL2Dir, procdynp.numL2Dir, procdynp.numL2Dir);
+        l2dir.power = l2dir.power + l2dirarray[i]->power * pppm_t;
+        set_pppm(pppm_t, 1 / l2dirarray[i]->cachep.executionTime,
+                 procdynp.numL2Dir, procdynp.numL2Dir, procdynp.numL2Dir);
+        l2dir.rt_power = l2dir.rt_power + l2dirarray[i]->rt_power * pppm_t;
+        power = power + l2dir.power;
+        rt_power = rt_power + l2dir.rt_power;
+      }
+      else {
+        set_pppm(pppm_t, l2dirarray[i]->cachep.clockRate, 1, 1, 1);
+        l2dir.power = l2dir.power + l2dirarray[i]->power * pppm_t;
+        power = power + l2dirarray[i]->power * pppm_t;
+        set_pppm(pppm_t, 1 / l2dirarray[i]->cachep.executionTime, 1, 1, 1);
+        l2dir.rt_power = l2dir.rt_power + l2dirarray[i]->rt_power * pppm_t;
+        rt_power = rt_power + l2dirarray[i]->rt_power * pppm_t;
+      }
+    }
+
+  if (XML->sys.mc.number_mcs > 0 && XML->sys.mc.memory_channels_per_mc > 0) {
+    mc->computeEnergy();
+    mc->computeEnergy(false);
+    set_pppm(pppm_t, XML->sys.mc.number_mcs * mc->mcp.clockRate,
+             XML->sys.mc.number_mcs, XML->sys.mc.number_mcs,
+             XML->sys.mc.number_mcs);
+    mcs.power = mc->power * pppm_t;
+    power = power + mcs.power;
+    set_pppm(pppm_t, 1 / mc->mcp.executionTime, XML->sys.mc.number_mcs,
+             XML->sys.mc.number_mcs, XML->sys.mc.number_mcs);
+    mcs.rt_power = mc->rt_power * pppm_t;
+    rt_power = rt_power + mcs.rt_power;
+  }
+
+  if (XML->sys.flashc.number_mcs > 0)  // flash controller
+  {
+    flashcontroller->computeEnergy();
+    flashcontroller->computeEnergy(false);
+    double number_fcs = flashcontroller->fcp.num_mcs;
+    set_pppm(pppm_t, number_fcs, number_fcs, number_fcs, number_fcs);
+    flashcontrollers.power = flashcontroller->power * pppm_t;
+    power = power + flashcontrollers.power;
+    set_pppm(pppm_t, number_fcs, number_fcs, number_fcs, number_fcs);
+    flashcontrollers.rt_power = flashcontroller->rt_power * pppm_t;
+    rt_power = rt_power + flashcontrollers.rt_power;
+  }
+
+  if (XML->sys.niu.number_units > 0) {
+    niu->computeEnergy();
+    niu->computeEnergy(false);
+    set_pppm(pppm_t, XML->sys.niu.number_units * niu->niup.clockRate,
+             XML->sys.niu.number_units, XML->sys.niu.number_units,
+             XML->sys.niu.number_units);
+    nius.power = niu->power * pppm_t;
+    power = power + nius.power;
+    set_pppm(pppm_t, XML->sys.niu.number_units * niu->niup.clockRate,
+             XML->sys.niu.number_units, XML->sys.niu.number_units,
+             XML->sys.niu.number_units);
+    nius.rt_power = niu->rt_power * pppm_t;
+    rt_power = rt_power + nius.rt_power;
+  }
+
+  if (XML->sys.pcie.number_units > 0 && XML->sys.pcie.num_channels > 0) {
+    pcie->computeEnergy();
+    pcie->computeEnergy(false);
+    set_pppm(pppm_t, XML->sys.pcie.number_units * pcie->pciep.clockRate,
+             XML->sys.pcie.number_units, XML->sys.pcie.number_units,
+             XML->sys.pcie.number_units);
+    pcies.power = pcie->power * pppm_t;
+    power = power + pcies.power;
+    set_pppm(pppm_t, XML->sys.pcie.number_units * pcie->pciep.clockRate,
+             XML->sys.pcie.number_units, XML->sys.pcie.number_units,
+             XML->sys.pcie.number_units);
+    pcies.rt_power = pcie->rt_power * pppm_t;
+    rt_power = rt_power + pcies.rt_power;
+  }
+
+  if (numNOC > 0) {
     // Compute energy of NoC (w or w/o links) or buses
     for (i = 0; i < numNOC; i++) {
       nocs[i]->computeEnergy();
