@@ -47,14 +47,18 @@
 #include "sharedcache.h"
 
 struct Energy {
-  struct {
+  struct Core {
     double total;
     double core;
     double icache;
     double dcache;
     double l2;
+
+    Core() : total(0.), core(0.), icache(0.), dcache(0.), l2(0.) {}
   } core;
   double l3;
+
+  Energy() : l3(0.) {}
 };
 using namespace cacti;
 
