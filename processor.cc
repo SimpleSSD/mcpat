@@ -532,6 +532,79 @@ void Processor::compute() {
   //  final nodes globalClock.optimize_wire();
 }
 
+void Processor::getEnergy(Energy *ptr) {
+  if (ptr) {
+    bool long_channel = XML->sys.longer_channel_device;
+    bool power_gating = XML->sys.power_gating;
+
+    // Core power
+    if (numCore > 0) {
+      ptr->core.core = (long_channel ? core.power.readOp.longer_channel_leakage
+                                     : core.power.readOp.leakage);
+      ptr->core.core += core.power.readOp.gate_leakage;
+      ptr->core.core += core.rt_power.readOp.dynamic;
+
+      // L1i/L1d power
+      ptr->core.icache = 0.;
+      ptr->core.dcache = 0.;
+
+      for (int i = 0; i < numCore; i++) {
+        if (power_gating) {
+          if (cores[i]->ifu->exist) {
+            ptr->core.icache +=
+                (long_channel
+                     ? cores[i]->ifu->power.readOp.longer_channel_leakage +
+                           cores[i]
+                               ->ifu->icache.power.readOp.longer_channel_leakage
+                     : cores[i]->ifu->power.readOp.leakage +
+                           cores[i]->ifu->icache.power.readOp.leakage);
+            ptr->core.icache += cores[i]->ifu->power.readOp.gate_leakage;
+            ptr->core.icache += cores[i]->ifu->icache.power.readOp.gate_leakage;
+            ptr->core.icache += cores[i]->ifu->rt_power.readOp.dynamic;
+            ptr->core.icache += cores[i]->ifu->icache.rt_power.readOp.dynamic;
+          }
+          if (cores[i]->lsu->exist) {
+            ptr->core.dcache +=
+                (long_channel
+                     ? cores[i]->lsu->power.readOp.longer_channel_leakage +
+                           cores[i]
+                               ->lsu->dcache.power.readOp.longer_channel_leakage
+                     : cores[i]->lsu->power.readOp.leakage +
+                           cores[i]->lsu->dcache.power.readOp.leakage);
+            ptr->core.dcache += cores[i]->lsu->power.readOp.gate_leakage;
+            ptr->core.dcache += cores[i]->lsu->dcache.power.readOp.gate_leakage;
+            ptr->core.dcache += cores[i]->lsu->rt_power.readOp.dynamic;
+            ptr->core.dcache += cores[i]->lsu->dcache.rt_power.readOp.dynamic;
+          }
+        }
+      }
+
+      ptr->core.total = ptr->core.core;
+      ptr->core.core = ptr->core.total - ptr->core.icache - ptr->core.dcache;
+    }
+
+    // L2 power
+    if (!XML->sys.Private_L2 && numL2 > 0) {
+      ptr->core.l2 = (long_channel ? l2.power.readOp.longer_channel_leakage
+                                   : l2.power.readOp.leakage);
+      ptr->core.l2 += l2.power.readOp.gate_leakage;
+      ptr->core.l2 += l2.rt_power.readOp.dynamic;
+
+      if (ptr->core.total > 0) {
+        ptr->core.core -= ptr->core.l2;
+      }
+    }
+
+    // L3 power
+    if (numL3 > 0) {
+      ptr->l3 = (long_channel ? l3.power.readOp.longer_channel_leakage
+                              : l3.power.readOp.leakage);
+      ptr->l3 += l3.power.readOp.gate_leakage;
+      ptr->l3 += l3.rt_power.readOp.dynamic;
+    }
+  }
+}
+
 void Processor::displayDeviceType(int device_type_, uint32_t indent) {
   string indent_str(indent, ' ');
 

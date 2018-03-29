@@ -46,6 +46,17 @@
 #include "router.h"
 #include "sharedcache.h"
 
+struct Energy {
+  struct {
+    double total;
+    double core;
+    double icache;
+    double dcache;
+    double l2;
+  } core;
+  double l3;
+};
+
 class Processor : public Component {
  public:
   ParseXML *XML;
@@ -69,6 +80,7 @@ class Processor : public Component {
   Processor(ParseXML *XML_interface);
   void compute();
   void set_proc_param();
+  void getEnergy(Energy *);
   void displayEnergy(uint32_t indent = 0, int plevel = 100, bool is_tdp = true);
   void displayDeviceType(int device_type_, uint32_t indent = 0);
   void displayInterconnectType(int interconnect_type_, uint32_t indent = 0);
