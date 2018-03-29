@@ -1,0 +1,44 @@
+# -*- mode:python -*-
+
+# Copyright (C) 2017 CAMELab
+#
+# This file is part of SimpleSSD.
+#
+# SimpleSSD is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# SimpleSSD is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with SimpleSSD.  If not, see <http://www.gnu.org/licenses/>.
+
+Import('*')
+
+if env['TARGET_ISA'] == 'null':
+    Return()
+
+Source('arbiter.cc')
+Source('area.cc')
+Source('bank.cc')
+Source('basic_circuit.cc')
+Source('cacti_interface.cc')
+Source('component.cc')
+Source('crossbar.cc')
+Source('decoder.cc')
+Source('htree2.cc')
+Source('io.cc')
+Source('mat.cc')
+Source('nuca.cc')
+Source('parameter.cc')
+Source('powergating.cc')
+Source('router.cc')
+Source('subarray.cc')
+Source('technology.cc')
+Source('uca.cc')
+Source('Ucache.cc')
+Source('wire.cc')
