@@ -36,10 +36,10 @@
 #include <iostream>
 #include <string>
 #include "XML_Parse.h"
-#include "basic_circuit.h"
-#include "const.h"
-#include "io.h"
-#include "parameter.h"
+#include "cacti/basic_circuit.h"
+#include "cacti/const.h"
+#include "cacti/io.h"
+#include "cacti/parameter.h"
 
 NoC::NoC(ParseXML *XML_interface, int ithNoC_, InputParameter *interface_ip_,
          double M_traffic_pattern_, double link_len_)
@@ -417,13 +417,15 @@ void NoC::displayEnergy(uint32_t indent, int plevel, bool is_tdp) {
     }
   }
   else {
-    //		cout << indent_str_next << "Instruction Fetch Unit    Peak Dynamic
+    //		cout << indent_str_next << "Instruction Fetch Unit    Peak
+    // Dynamic
     //=
     //"
     //<< ifu->rt_power.readOp.dynamic*clockRate << " W" << endl;
     //		cout << indent_str_next << "Instruction Fetch Unit Subthreshold
     // Leakage = " << ifu->rt_power.readOp.leakage <<" W" << endl;
-    //		cout << indent_str_next << "Instruction Fetch Unit    Gate Leakage
+    //		cout << indent_str_next << "Instruction Fetch Unit    Gate
+    // Leakage
     //=
     //"
     //<< ifu->rt_power.readOp.gate_leakage << " W" << endl; 		cout <<

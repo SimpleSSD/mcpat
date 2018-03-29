@@ -34,6 +34,8 @@
 
 #include "component.h"
 
+namespace cacti {
+
 class Sleep_tx : public Component {
  public:
   Sleep_tx(double _perf_with_sleep_tx,
@@ -73,5 +75,7 @@ class Sleep_tx : public Component {
   void leakage_feedback(double temperature){};
   ~Sleep_tx(){};
 };
+
+}  // namespace cacti
 
 #endif /* POWERGATING_H_ */

@@ -33,13 +33,14 @@
 #define MEMORYCTRL_H_
 
 #include "XML_Parse.h"
-#include "parameter.h"
+#include "cacti/parameter.h"
 //#include "io.h"
 #include "array.h"
 //#include "Undifferentiated_Core_Area.h"
-#include "logic.h"
 #include <vector>
 #include "basic_components.h"
+#include "logic.h"
+using namespace cacti;
 
 class MCBackend : public Component {
  public:

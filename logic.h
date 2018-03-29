@@ -37,15 +37,16 @@
 #include <iostream>
 #include "XML_Parse.h"
 #include "arch_const.h"
-#include "basic_circuit.h"
 #include "basic_components.h"
-#include "cacti_interface.h"
-#include "component.h"
-#include "const.h"
-#include "decoder.h"
-#include "parameter.h"
+#include "cacti/basic_circuit.h"
+#include "cacti/cacti_interface.h"
+#include "cacti/component.h"
+#include "cacti/const.h"
+#include "cacti/decoder.h"
+#include "cacti/parameter.h"
 
 using namespace std;
+using namespace cacti;
 
 class selection_logic : public Component {
  public:
@@ -109,7 +110,7 @@ class inst_decoder : public Component {
   enum Device_ty device_ty;
   enum Core_type core_ty;
 
-  Decoder *final_dec;
+  cacti::Decoder *final_dec;
   Predec *pre_dec;
 
   statsDef tdp_stats;

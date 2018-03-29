@@ -34,6 +34,8 @@
 #include <cmath>
 #include <iostream>
 
+using namespace cacti;
+
 double longer_channel_device_reduction(enum Device_ty device_ty,
                                        enum Core_type core_ty) {
   double longer_channel_device_percentage_core;

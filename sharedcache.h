@@ -33,11 +33,12 @@
 #define SHAREDCACHE_H_
 #include <vector>
 #include "XML_Parse.h"
-#include "area.h"
 #include "array.h"
 #include "basic_components.h"
+#include "cacti/area.h"
+#include "cacti/parameter.h"
 #include "logic.h"
-#include "parameter.h"
+using namespace cacti;
 
 class SharedCache : public Component {
  public:

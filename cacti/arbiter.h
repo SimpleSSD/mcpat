@@ -41,6 +41,8 @@
 #include "parameter.h"
 #include "wire.h"
 
+namespace cacti {
+
 class Arbiter : public Component {
  public:
   Arbiter(double Req, double flit_sz, double output_len,
@@ -66,5 +68,7 @@ class Arbiter : public Component {
   double TriS1, TriS2;
   double min_w_pmos, Vdd;
 };
+
+}  // namespace cacti
 
 #endif

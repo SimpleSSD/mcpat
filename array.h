@@ -35,12 +35,13 @@
 #include <iostream>
 #include <string>
 #include "basic_components.h"
-#include "cacti_interface.h"
-#include "component.h"
-#include "const.h"
-#include "parameter.h"
+#include "cacti/cacti_interface.h"
+#include "cacti/component.h"
+#include "cacti/const.h"
+#include "cacti/parameter.h"
 
 using namespace std;
+using namespace cacti;
 
 class ArrayST : public Component {
  public:

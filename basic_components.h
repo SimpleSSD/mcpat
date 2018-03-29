@@ -34,7 +34,7 @@
 
 #include <vector>
 #include "XML_Parse.h"
-#include "parameter.h"
+#include "cacti/parameter.h"
 
 const double cdb_overhead = 1.1;
 

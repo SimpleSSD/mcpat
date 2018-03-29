@@ -37,6 +37,7 @@
 #include "parameter.h"
 
 using namespace std;
+using namespace cacti;
 
 Decoder::Decoder(int _num_dec_signals, bool flag_way_select,
                  double _C_ld_dec_out, double _R_wire_dec_out,
@@ -54,10 +55,10 @@ Decoder::Decoder(int _num_dec_signals, bool flag_way_select,
       is_wl_tr(is_wl_tr_),
       total_driver_nwidth(0),
       total_driver_pwidth(0),
+      sleeptx(NULL),
       cell(cell_),
-      power_gating(power_gating_),
       nodes_DSTN(nodes_DSTN_),
-      sleeptx(NULL) {
+      power_gating(power_gating_) {
   for (int i = 0; i < MAX_NUMBER_GATES_STAGE; i++) {
     w_dec_n[i] = 0;
     w_dec_p[i] = 0;
@@ -1528,9 +1529,9 @@ Driver::Driver(double c_gate_load_, double c_wire_load_, double r_wire_load_,
       is_dram_(is_dram),
       total_driver_nwidth(0),
       total_driver_pwidth(0),
-      power_gating(power_gating_),
+      sleeptx(NULL),
       nodes_DSTN(nodes_DSTN_),
-      sleeptx(NULL) {
+      power_gating(power_gating_) {
   for (int i = 0; i < MAX_NUMBER_GATES_STAGE; i++) {
     width_n[i] = 0;
     width_p[i] = 0;

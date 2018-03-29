@@ -41,6 +41,8 @@
 
 using namespace std;
 
+namespace cacti {
+
 class min_values_t;
 class mem_array;
 class uca_org_t;
@@ -627,5 +629,7 @@ class mem_array {
 
   static bool lt(const mem_array *m1, const mem_array *m2);
 };
+
+}  // namespace cacti
 
 #endif

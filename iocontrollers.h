@@ -34,12 +34,13 @@
 #endif /* IOCONTROLLERS_H_ */
 
 #include "XML_Parse.h"
-#include "parameter.h"
+#include "cacti/parameter.h"
 //#include "io.h"
 #include "array.h"
 //#include "Undifferentiated_Core_Area.h"
 #include <vector>
 #include "basic_components.h"
+using namespace cacti;
 
 class NIUController : public Component {
  public:

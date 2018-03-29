@@ -37,6 +37,7 @@
 #include "parameter.h"
 
 using namespace std;
+using namespace cacti;
 
 /*
  * Sizing of sleep tx is independent of sleep/power-saving supply voltage,
@@ -79,15 +80,15 @@ Sleep_tx::Sleep_tx(double _perf_with_sleep_tx,
     : perf_with_sleep_tx(_perf_with_sleep_tx),
       active_Isat(_active_Isat),
       is_footer(_is_footer),
-      c_circuit_wakeup(_c_circuit_wakeup),
-      V_delta(_V_delta),
       num_sleep_tx(_num_sleep_tx),
+      c_circuit_wakeup(_c_circuit_wakeup),
       // vt_circuit(_vt_circuit),
       // vt_sleep_tx(_vt_sleep_tx),
       // mobility(_mobility),
       // c_ox(_c_ox)
       cell(cell_),
-      is_sleep_tx(true) {
+      is_sleep_tx(true),
+      V_delta(_V_delta) {
   // a single sleep tx in a network
   double raw_area, raw_width, raw_hight;
   double p_to_n_sz_ratio = pmos_to_nmos_sz_ratio(false, false, true);
@@ -120,7 +121,7 @@ Sleep_tx::Sleep_tx(double _perf_with_sleep_tx,
 double Sleep_tx::compute_penalty() {
   // V_delta = VDD - VCCmin nothing to do with threshold of sleep tx. Although
   // it might be OK to use sleep tx to control the V_delta
-  double c_load;
+  // double c_load;
   double p_to_n_sz_ratio = pmos_to_nmos_sz_ratio(false, false, true);
 
   if (is_footer) {
@@ -158,4 +159,6 @@ double Sleep_tx::compute_penalty() {
           just the wakeup latency will be shorter than the wakeup time from full
      asleep. So, the sleep time and energy does not matter
   */
+
+  return 0.;
 }

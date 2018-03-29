@@ -34,10 +34,11 @@
 #include "XML_Parse.h"
 #include "array.h"
 #include "basic_components.h"
+#include "cacti/parameter.h"
+#include "cacti/router.h"
 #include "interconnect.h"
 #include "logic.h"
-#include "parameter.h"
-#include "router.h"
+using namespace cacti;
 
 class NoC : public Component {
  public:

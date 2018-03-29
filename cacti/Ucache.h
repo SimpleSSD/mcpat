@@ -38,6 +38,8 @@
 #include "router.h"
 #include "uca.h"
 
+namespace cacti {
+
 class min_values_t {
  public:
   double min_delay;
@@ -112,5 +114,7 @@ struct calc_time_mt_wrapper_struct {
 };
 
 void *calc_time_mt_wrapper(void *void_obj);
+
+}  // namespace cacti
 
 #endif

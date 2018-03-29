@@ -35,12 +35,12 @@
 #include <iostream>
 #include <string>
 #include "XML_Parse.h"
-#include "basic_circuit.h"
 #include "basic_components.h"
-#include "const.h"
-#include "io.h"
+#include "cacti/basic_circuit.h"
+#include "cacti/const.h"
+#include "cacti/io.h"
+#include "cacti/parameter.h"
 #include "logic.h"
-#include "parameter.h"
 
 /*
 SUN Niagara 2 I/O power analysis:
@@ -74,11 +74,19 @@ Total energy of FBDIMM, NIC, PCIe = 11.14 - 2.17*1.5 = 7.89
 NIUController::NIUController(ParseXML *XML_interface,
                              InputParameter *interface_ip_)
     : XML(XML_interface), interface_ip(*interface_ip_) {
-  double frontend_area, phy_area, mac_area, SerDer_area;
-  double frontend_dyn, mac_dyn, SerDer_dyn;
-  double frontend_gates, mac_gates, SerDer_gates = 0.;
+  double frontend_area;
+  // double phy_area;
+  double mac_area;
+  double SerDer_area;
+  double frontend_dyn;
+  double mac_dyn;
+  double SerDer_dyn;
+  double frontend_gates;
+  double mac_gates;
+  // double SerDer_gates = 0.;
   double pmos_to_nmos_sizing_r = pmos_to_nmos_sz_ratio();
-  double NMOS_sizing, PMOS_sizing;
+  double NMOS_sizing;
+  double PMOS_sizing;
 
   set_niu_param();
   local_result = init_interface(&interface_ip);
@@ -100,7 +108,7 @@ NIUController::NIUController(ParseXML *XML_interface,
     // ChipEstimate hard IP @65nm.  SerDer is very hard to scale
     SerDer_area = (1.39 + 0.36) * (interface_ip.F_sz_um /
                                    0.065);  //* (interface_ip.F_sz_um/0.065);
-    phy_area = frontend_area + SerDer_area;
+    // phy_area = frontend_area + SerDer_area;
     // total area
     area.set_area((mac_area + frontend_area + SerDer_area) * 1e6);
     // Power
@@ -124,7 +132,7 @@ NIUController::NIUController(ParseXML *XML_interface,
     // Cadence ChipEstimate using 65nm
     mac_gates = 111700;
     frontend_gates = 320000;
-    SerDer_gates = 200000;
+    // SerDer_gates = 200000;
     NMOS_sizing = 5 * g_tp.min_w_nmos_;
     PMOS_sizing = 5 * g_tp.min_w_nmos_ * pmos_to_nmos_sizing_r;
   }
@@ -164,7 +172,7 @@ NIUController::NIUController(ParseXML *XML_interface,
 
     mac_gates = 111700;
     frontend_gates = 52000;
-    SerDer_gates = 199260;
+    // SerDer_gates = 199260;
 
     NMOS_sizing = g_tp.min_w_nmos_;
     PMOS_sizing = g_tp.min_w_nmos_ * pmos_to_nmos_sizing_r;
@@ -261,11 +269,19 @@ void NIUController::set_niu_param() {
 PCIeController::PCIeController(ParseXML *XML_interface,
                                InputParameter *interface_ip_)
     : XML(XML_interface), interface_ip(*interface_ip_) {
-  double frontend_area, phy_area, ctrl_area, SerDer_area;
-  double ctrl_dyn, frontend_dyn, SerDer_dyn;
-  double ctrl_gates, frontend_gates, SerDer_gates = 0.;
+  // double frontend_area;
+  // double phy_area;
+  double ctrl_area;
+  double SerDer_area;
+  double ctrl_dyn;
+  // double frontend_dyn;
+  double SerDer_dyn;
+  double ctrl_gates;
+  // double frontend_gates;
+  double SerDer_gates = 0.;
   double pmos_to_nmos_sizing_r = pmos_to_nmos_sz_ratio();
-  double NMOS_sizing, PMOS_sizing;
+  double NMOS_sizing;
+  double PMOS_sizing;
 
   /* Assuming PCIe is bit-slice based architecture
    * This is the reason for /8 in both area and power calculation
@@ -282,13 +298,13 @@ PCIeController::PCIeController(ParseXML *XML_interface,
                 (interface_ip.F_sz_um / 0.065);
     // Area estimation based on average of die photo from Niagara 2, and Cadence
     // ChipEstimate @ 65nm.
-    frontend_area = (5.2 + 0.1) / 2 * (interface_ip.F_sz_um / 0.065) *
-                    (interface_ip.F_sz_um / 0.065);
+    // frontend_area = (5.2 + 0.1) / 2 * (interface_ip.F_sz_um / 0.065) *
+    //                 (interface_ip.F_sz_um / 0.065);
     // Area estimation based on average of die photo from Niagara 2 and Cadence
     // ChipEstimate hard IP @65nm.  SerDer is very hard to scale
     SerDer_area = (3.03 + 0.36) * (interface_ip.F_sz_um /
                                    0.065);  //* (interface_ip.F_sz_um/0.065);
-    phy_area = frontend_area + SerDer_area;
+    // phy_area = frontend_area + SerDer_area;
     // total area
     // Power
     // Cadence ChipEstimate using 65nm the controller includes everything: the
@@ -438,11 +454,19 @@ void PCIeController::set_pcie_param() {
 FlashController::FlashController(ParseXML *XML_interface,
                                  InputParameter *interface_ip_)
     : XML(XML_interface), interface_ip(*interface_ip_) {
-  double frontend_area, phy_area, ctrl_area, SerDer_area;
-  double ctrl_dyn, frontend_dyn, SerDer_dyn;
-  double ctrl_gates, frontend_gates, SerDer_gates = 0.;
+  // double frontend_area;
+  // double phy_area;
+  double ctrl_area;
+  double SerDer_area;
+  double ctrl_dyn;
+  // double frontend_dyn;
+  double SerDer_dyn;
+  double ctrl_gates;
+  // double frontend_gates;
+  double SerDer_gates = 0.;
   double pmos_to_nmos_sizing_r = pmos_to_nmos_sz_ratio();
-  double NMOS_sizing, PMOS_sizing;
+  double NMOS_sizing;
+  double PMOS_sizing;
 
   /* Assuming PCIe is bit-slice based architecture
    * This is the reason for /8 in both area and power calculation

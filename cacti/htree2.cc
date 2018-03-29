@@ -33,6 +33,7 @@
 #include <assert.h>
 #include <iostream>
 #include "wire.h"
+using namespace cacti;
 
 Htree2::Htree2(enum Wire_type wire_model, double mat_w, double mat_h,
                int a_bits, int d_inbits, int search_data_in, int d_outbits,

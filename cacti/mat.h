@@ -38,6 +38,8 @@
 #include "subarray.h"
 #include "wire.h"
 
+namespace cacti {
+
 class Mat : public Component {
  public:
   Mat(const DynamicParameter &dyn_p);
@@ -165,5 +167,7 @@ class Mat : public Component {
   int EWP;
   int SCHP;
 };
+
+}  // namespace cacti
 
 #endif

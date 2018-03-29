@@ -30,6 +30,7 @@
  ***************************************************************************/
 
 #include "arbiter.h"
+using namespace cacti;
 
 Arbiter::Arbiter(double n_req, double flit_size_, double output_len,
                  TechnologyParameter::DeviceType *dt)

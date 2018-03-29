@@ -37,6 +37,8 @@
 
 using namespace std;
 
+namespace cacti {
+
 class Crossbar;
 class Bank;
 
@@ -65,5 +67,7 @@ class Component {
  private:
   double compute_diffusion_width(int num_stacked_in, int num_folded_tr);
 };
+
+}  // namespace cacti
 
 #endif

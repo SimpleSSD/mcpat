@@ -34,10 +34,10 @@
 #include <assert.h>
 #include <math.h>
 #include <iostream>
-#include "area.h"
-#include "decoder.h"
+#include "cacti/area.h"
+#include "cacti/decoder.h"
+#include "cacti/parameter.h"
 #include "globalvar.h"
-#include "parameter.h"
 
 using namespace std;
 
@@ -198,24 +198,25 @@ void ArrayST::optimize_array() {
     //				by Kostas Pagiamtzis et al.
     //				CAM structures can be heavily pipelined and use
     // look-ahead  techniques,
-    //				therefore timing can be relaxed. But McPAT does not
-    //model  the  advanced 				techniques. If continue
-    //optimizing, the area efficiency will  be  too low
+    //				therefore timing can be relaxed. But McPAT does
+    // not  model  the  advanced 				techniques. If
+    // continue
+    // optimizing, the area efficiency will  be  too low
     //		*/
     //		//For CAM and FA, stop opt if area efficiency is too low
     //		if (throughput_overflow==true)
     //			cout<< "Warning: " <<" McPAT stopped optimization on
-    //throughput  for
+    // throughput  for
     //"<< name
     //				<<" array structure because its area efficiency
-    //is  below
+    // is  below
     //"<<area_efficiency_threshold<<"% " << endl; 		if
     //(latency_overflow==true)
-    //			cout<< "Warning: " <<" McPAT stopped optimization on latency
-    //for
+    //			cout<< "Warning: " <<" McPAT stopped optimization on
+    // latency  for
     //"<<  name
     //				<<" array structure because its area efficiency
-    //is  below
+    // is  below
     //"<<area_efficiency_threshold<<"% " << endl;
     //	}
 

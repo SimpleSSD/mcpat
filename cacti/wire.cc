@@ -31,6 +31,7 @@
 
 #include "wire.h"
 #include "cmath"
+using namespace cacti;
 // use this constructor to calculate wire stats
 Wire::Wire(enum Wire_type wire_model, double wl, int n, double w_s, double s_s,
            enum Wire_placement wp, double resistivity,
@@ -893,7 +894,7 @@ void Wire::print_wire() {
 }
 
 void Wire::wire_dvs_update() {
-  double i, j, del;
+  double del;
   powerDef pow;
   pow = wire_model(global.area.w, global.area.h, &del);
   global.delay = del;

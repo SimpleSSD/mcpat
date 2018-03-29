@@ -28,6 +28,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.”
  *
  ***************************************************************************/
+#include "processor.h"
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
@@ -37,10 +38,9 @@
 #include <iostream>
 #include "XML_Parse.h"
 #include "array.h"
-#include "basic_circuit.h"
-#include "const.h"
-#include "parameter.h"
-#include "processor.h"
+#include "cacti/basic_circuit.h"
+#include "cacti/const.h"
+#include "cacti/parameter.h"
 #include "version.h"
 
 Processor::Processor(ParseXML *XML_interface)

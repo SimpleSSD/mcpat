@@ -40,6 +40,8 @@
 #include "subarray.h"
 #include "wire.h"
 
+namespace cacti {
+
 // leakge power includes entire htree in a bank (when uca_tree == false)
 // leakge power includes only part to one bank when uca_tree == true
 
@@ -89,5 +91,7 @@ class Htree2 : public Component {
 
   TechnologyParameter::DeviceType *deviceType;
 };
+
+}  // namespace cacti
 
 #endif

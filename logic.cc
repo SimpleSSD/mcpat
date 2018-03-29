@@ -788,7 +788,7 @@ FunctionalUnit::FunctionalUnit(ParseXML *XML_interface, int ithCore_,
 
 void FunctionalUnit::computeEnergy(bool is_tdp) {
   double pppm_t[4] = {1, 1, 1, 1};
-  double FU_duty_cycle;
+  double FU_duty_cycle = 0.;
   if (is_tdp) {
     set_pppm(pppm_t, 2, 2, 2, 2);  // 2 means two source operands needs to be
                                    // passed for each int instruction.
@@ -1309,13 +1309,13 @@ inst_decoder::inst_decoder(bool _is_default,
 }
 
 void inst_decoder::inst_decoder_delay_power() {
-  double dec_outrisetime;
-  double inrisetime = 0, outrisetime;
+  // double dec_outrisetime;
+  // double inrisetime = 0, outrisetime;
   double pppm_t[4] = {1, 1, 1, 1};
   double squencer_passes = x86 ? 2 : 1;
 
-  outrisetime = pre_dec->compute_delays(inrisetime);
-  dec_outrisetime = final_dec->compute_delays(outrisetime);
+  // outrisetime = pre_dec->compute_delays(inrisetime);
+  // dec_outrisetime = final_dec->compute_delays(outrisetime);
   set_pppm(pppm_t, squencer_passes * num_decoder_segments, num_decoder_segments,
            squencer_passes * num_decoder_segments, num_decoder_segments);
   power = power + pre_dec->power * pppm_t;

@@ -41,6 +41,8 @@
 #include "parameter.h"
 #include "wire.h"
 
+namespace cacti {
+
 class Crossbar : public Component {
  public:
   Crossbar(double in, double out, double flit_sz,
@@ -72,5 +74,7 @@ class Crossbar : public Component {
   double TriS1, TriS2;
   double min_w_pmos, Vdd;
 };
+
+}  // namespace cacti
 
 #endif

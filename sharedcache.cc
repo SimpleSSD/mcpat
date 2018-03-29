@@ -36,13 +36,13 @@
 #include <cmath>
 #include <iostream>
 #include "XML_Parse.h"
-#include "arbiter.h"
 #include "array.h"
-#include "basic_circuit.h"
-#include "const.h"
-#include "io.h"
+#include "cacti/arbiter.h"
+#include "cacti/basic_circuit.h"
+#include "cacti/const.h"
+#include "cacti/io.h"
+#include "cacti/parameter.h"
 #include "logic.h"
-#include "parameter.h"
 
 SharedCache::SharedCache(ParseXML *XML_interface, int ithCache_,
                          InputParameter *interface_ip_,
@@ -54,7 +54,8 @@ SharedCache::SharedCache(ParseXML *XML_interface, int ithCache_,
       dir_overhead(0) {
   int idx;
   int tag, data;
-  bool is_default, debug;
+  // bool is_default;
+  bool debug;
   enum Device_ty device_t;
   enum Core_type core_t;
   double size, line, assoc, banks;
@@ -68,7 +69,7 @@ SharedCache::SharedCache(ParseXML *XML_interface, int ithCache_,
   }
 
   debug = false;
-  is_default = true;  // indication for default setup
+  // is_default = true;  // indication for default setup
   if (XML->sys.Embedded) {
     interface_ip.wt = Global_30;
     interface_ip.wire_is_mat_type = 0;

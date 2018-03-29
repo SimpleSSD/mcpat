@@ -50,6 +50,12 @@
 
 using namespace std;
 
+#ifndef NTHREADS
+#define NTHREADS 4
+#endif
+
+namespace cacti {
+
 const uint32_t nthreads = NTHREADS;
 
 void min_values_t::update_min_values(const min_values_t *val) {
@@ -731,7 +737,7 @@ void filter_data_arr(list<mem_array *> &curr_list) {
  * 4. Cache model with least cost is picked from sol_list
  */
 void solve(uca_org_t *fin_res) {
-  bool is_dram = false;
+  //  bool is_dram = false;
   int pure_ram = g_ip->pure_ram;
   bool pure_cam = g_ip->pure_cam;
 
@@ -764,15 +770,16 @@ void solve(uca_org_t *fin_res) {
   }
 
   bool is_tag;
-  uint32_t ram_cell_tech_type;
+  // uint32_t ram_cell_tech_type;
 
   // If it's a cache, first calculate the area, delay and power for all tag
   // array partitions.
   if (!(pure_ram || pure_cam || g_ip->fully_assoc)) {  // cache
     is_tag = true;
-    ram_cell_tech_type = g_ip->tag_arr_ram_cell_tech_type;
-    is_dram =
-        ((ram_cell_tech_type == lp_dram) || (ram_cell_tech_type == comm_dram));
+    // ram_cell_tech_type = g_ip->tag_arr_ram_cell_tech_type;
+    // is_dram =
+    //     ((ram_cell_tech_type == lp_dram) || (ram_cell_tech_type ==
+    //     comm_dram));
     init_tech_params(g_ip->F_sz_um, is_tag);
 
     for (uint32_t t = 0; t < nthreads; t++) {
@@ -801,9 +808,9 @@ void solve(uca_org_t *fin_res) {
   // {//in the new cacti, cam, fully_associative cache are processed as single
   // array in the data portion
   is_tag = false;
-  ram_cell_tech_type = g_ip->data_arr_ram_cell_tech_type;
-  is_dram =
-      ((ram_cell_tech_type == lp_dram) || (ram_cell_tech_type == comm_dram));
+  // ram_cell_tech_type = g_ip->data_arr_ram_cell_tech_type;
+  // is_dram =
+  //     ((ram_cell_tech_type == lp_dram) || (ram_cell_tech_type == comm_dram));
   init_tech_params(g_ip->F_sz_um, is_tag);
 
   for (uint32_t t = 0; t < nthreads; t++) {
@@ -1133,3 +1140,5 @@ endl; exit(1);
   fin_res->find_energy();
 }
 */
+
+}  // namespace cacti

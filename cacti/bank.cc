@@ -31,6 +31,7 @@
 
 #include "bank.h"
 #include <iostream>
+using namespace cacti;
 
 Bank::Bank(const DynamicParameter &dyn_p)
     : dp(dyn_p),

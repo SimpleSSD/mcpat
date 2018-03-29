@@ -26,10 +26,10 @@
 #include "processor.h"
 
 class McPAT {
-private:
+ private:
   ParseXML *setting;
 
-public:
+ public:
   McPAT(ParseXML *);
   ~McPAT();
 

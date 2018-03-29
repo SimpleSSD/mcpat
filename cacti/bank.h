@@ -37,6 +37,8 @@
 #include "htree2.h"
 #include "mat.h"
 
+namespace cacti {
+
 class Bank : public Component {
  public:
   Bank(const DynamicParameter &dyn_p);
@@ -64,5 +66,7 @@ class Bank : public Component {
   double wl_leakage;
   double cl_leakage;
 };
+
+}  // namespace cacti
 
 #endif

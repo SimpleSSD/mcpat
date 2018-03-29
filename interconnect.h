@@ -33,16 +33,17 @@
 #define __INTERCONNECT_H__
 
 #include "assert.h"
-#include "basic_circuit.h"
 #include "basic_components.h"
-#include "cacti_interface.h"
-#include "component.h"
-#include "parameter.h"
-#include "subarray.h"
-#include "wire.h"
+#include "cacti/basic_circuit.h"
+#include "cacti/cacti_interface.h"
+#include "cacti/component.h"
+#include "cacti/parameter.h"
+#include "cacti/subarray.h"
+#include "cacti/wire.h"
 
 // leakge power includes entire htree in a bank (when uca_tree == false)
 // leakge power includes only part to one bank when uca_tree == true
+using namespace cacti;
 
 class interconnect : public Component {
  public:

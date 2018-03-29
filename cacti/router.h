@@ -43,6 +43,8 @@
 #include "parameter.h"
 #include "wire.h"
 
+namespace cacti {
+
 class Router : public Component {
  public:
   Router(double flit_size_,
@@ -101,5 +103,7 @@ class Router : public Component {
 
   double min_w_pmos;
 };
+
+}  // namespace cacti
 
 #endif

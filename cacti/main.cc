@@ -44,6 +44,7 @@
 #include "io.h"
 
 using namespace std;
+using namespace cacti;
 
 int main(int argc, char *argv[]) {
   uca_org_t result;

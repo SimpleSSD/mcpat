@@ -30,6 +30,7 @@
  ***************************************************************************/
 
 #include "router.h"
+using namespace cacti;
 
 Router::Router(double flit_size_,
                double vc_buf, /* vc size = vc_buffer_size * flit_size */

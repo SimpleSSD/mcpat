@@ -36,10 +36,10 @@
 #include <iostream>
 #include <string>
 #include "XML_Parse.h"
-#include "basic_circuit.h"
-#include "const.h"
-#include "io.h"
-#include "parameter.h"
+#include "cacti/basic_circuit.h"
+#include "cacti/const.h"
+#include "cacti/io.h"
+#include "cacti/parameter.h"
 //#include "globalvar.h"
 
 InstFetchU::InstFetchU(ParseXML *XML_interface, int ithCore_,
@@ -565,7 +565,7 @@ SchedulerU::SchedulerU(ParseXML *XML_interface, int ithCore_,
 
   clockRate = coredynp.clockRate;
   executionTime = coredynp.executionTime;
-  if ((coredynp.core_ty == Inorder && coredynp.multithreaded)) {
+  if (coredynp.core_ty == Inorder && coredynp.multithreaded) {
     // Instruction issue queue, in-order multi-issue or multithreaded processor
     // also has this structure. Unified window for Inorder processors
     tag = int(log2(XML->sys.core[ithCore].number_hardware_threads) *
@@ -818,7 +818,7 @@ SchedulerU::SchedulerU(ParseXML *XML_interface, int ithCore_,
       register (and freelist) can be found and the RAT can be appropriately
       updated.
                                       }
-                                      else if ((coredynp.rm_ty ==CAMbased))
+                                      else if (coredynp.rm_ty ==CAMbased)
                                       {
                                               data =
       int(ceil((robExtra+coredynp.pc_width + fmax(coredynp.phy_ireg_width,
@@ -836,8 +836,8 @@ SchedulerU::SchedulerU(ParseXML *XML_interface, int ithCore_,
       //				data  =
       int(ceil((robExtra+coredynp.pc_width
       +
-      //						coredynp.instruction_length +
-      2*coredynp.phy_ireg_width
+      // coredynp.instruction_length
+      + 2*coredynp.phy_ireg_width
       + coredynp.fp_data_width)/8.0));
 
                                       //using phy_reg number to search in the
@@ -900,7 +900,7 @@ LoadStoreU::LoadStoreU(ParseXML *XML_interface, int ithCore_,
       exist(exist_) {
   if (!exist)
     return;
-  int idx, tag, data, size, line, assoc, banks;
+  int idx, tag, data, size, line, assoc;
   bool debug = false;
   int ldst_opcode = XML->sys.core[ithCore].opcode_width;  // 16;
 
@@ -916,7 +916,7 @@ LoadStoreU::LoadStoreU(ParseXML *XML_interface, int ithCore_,
   size = (int)XML->sys.core[ithCore].dcache.dcache_config[0];
   line = (int)XML->sys.core[ithCore].dcache.dcache_config[1];
   assoc = (int)XML->sys.core[ithCore].dcache.dcache_config[2];
-  banks = (int)XML->sys.core[ithCore].dcache.dcache_config[3];
+  // banks = (int)XML->sys.core[ithCore].dcache.dcache_config[3];
   idx = debug ? 9 : int(ceil(log2(size / line / assoc)));
   tag = debug ? 51
               : XML->sys.physical_address_width - idx - int(ceil(log2(line))) +
@@ -1449,7 +1449,7 @@ EXECU::EXECU(ParseXML *XML_interface, int ithCore_,
       fp_bypass(0),
       fpTagBypass(0),
       exist(exist_) {
-  bool exist_flag = true;
+  // bool exist_flag = true;
   if (!exist)
     return;
   double fu_height = 0.0;
@@ -1797,7 +1797,7 @@ used for index the RAT entry to be updated.
         fFRAT->area.set_area(fFRAT->area.get_area() + fFRAT->local_result.area);
         area.set_area(area.get_area() + fFRAT->area.get_area());
       }
-      else if ((coredynp.rm_ty == CAMbased)) {
+      else if (coredynp.rm_ty == CAMbased) {
         // FRAT
         tag = coredynp.arch_ireg_width + coredynp.hthread_width;
         data = int(
@@ -2080,7 +2080,7 @@ used for index the RAT entry to be updated.
         fFRAT->area.set_area(fFRAT->area.get_area() + fFRAT->local_result.area);
         area.set_area(area.get_area() + fFRAT->area.get_area());
       }
-      else if ((coredynp.rm_ty == CAMbased)) {
+      else if (coredynp.rm_ty == CAMbased) {
         // FRAT
         tag = coredynp.arch_ireg_width + coredynp.hthread_width;
         data = int(ceil(
@@ -2599,13 +2599,15 @@ void BranchPredictor::displayEnergy(uint32_t indent, int plevel, bool is_tdp) {
     //		cout << indent_str_next << "Global Predictor    Peak Dynamic = "
     //<<  globalBPT->rt_power.readOp.dynamic*clockRate << " W" << endl;
     //		cout << indent_str_next << "Global Predictor    Subthreshold
-    //Leakage = " << globalBPT->rt_power.readOp.leakage <<" W" << endl;  cout <<
+    // Leakage = " << globalBPT->rt_power.readOp.leakage <<" W" << endl;  cout
+    // <<
     // indent_str_next << "Global Predictor    Gate Leakage = " <<
     // globalBPT->rt_power.readOp.gate_leakage << " W" << endl;
     // cout
     // <<  indent_str_next << "Local Predictor   Peak Dynamic = " <<
     // L1_localBPT->rt_power.readOp.dynamic*clockRate  << " W" << endl;
-    //		cout << indent_str_next << "Local Predictor   Subthreshold Leakage
+    //		cout << indent_str_next << "Local Predictor   Subthreshold
+    // Leakage
     //=
     //"
     //<< L1_localBPT->rt_power.readOp.leakage  << " W" << endl;
@@ -2958,13 +2960,13 @@ void InstFetchU::displayEnergy(uint32_t indent, int plevel, bool is_tdp) {
                              ID_misc->power.readOp.leakage))
          << " W" << endl;
 
-    double tot_leakage =
-        (ID_inst->power.readOp.leakage + ID_operand->power.readOp.leakage +
-         ID_misc->power.readOp.leakage);
-    double tot_leakage_longchannel =
-        (ID_inst->power.readOp.longer_channel_leakage +
-         ID_operand->power.readOp.longer_channel_leakage +
-         ID_misc->power.readOp.longer_channel_leakage);
+    // double tot_leakage =
+    //     (ID_inst->power.readOp.leakage + ID_operand->power.readOp.leakage +
+    //      ID_misc->power.readOp.leakage);
+    // double tot_leakage_longchannel =
+    //     (ID_inst->power.readOp.longer_channel_leakage +
+    //      ID_operand->power.readOp.longer_channel_leakage +
+    //      ID_misc->power.readOp.longer_channel_leakage);
     double tot_leakage_pg = (ID_inst->power.readOp.power_gated_leakage +
                              ID_operand->power.readOp.power_gated_leakage +
                              ID_misc->power.readOp.power_gated_leakage);
@@ -3038,7 +3040,7 @@ void RENAMINGU::computeEnergy(bool is_tdp) {
           fFRAT->stats_t.writeAc.access = fFRAT->l_ip.num_wr_ports;
           fFRAT->tdp_stats = fFRAT->stats_t;
         }
-        else if ((coredynp.rm_ty == CAMbased)) {
+        else if (coredynp.rm_ty == CAMbased) {
           iFRAT->stats_t.readAc.access = iFRAT->l_ip.num_search_ports;
           iFRAT->stats_t.writeAc.access = iFRAT->l_ip.num_wr_ports;
           iFRAT->tdp_stats = iFRAT->stats_t;
@@ -3078,7 +3080,7 @@ void RENAMINGU::computeEnergy(bool is_tdp) {
           fFRAT->stats_t.writeAc.access = fFRAT->l_ip.num_wr_ports;
           fFRAT->tdp_stats = fFRAT->stats_t;
         }
-        else if ((coredynp.rm_ty == CAMbased)) {
+        else if (coredynp.rm_ty == CAMbased) {
           iFRAT->stats_t.readAc.access = iFRAT->l_ip.num_search_ports;
           iFRAT->stats_t.writeAc.access = iFRAT->l_ip.num_wr_ports;
           iFRAT->tdp_stats = iFRAT->stats_t;
@@ -3131,7 +3133,7 @@ void RENAMINGU::computeEnergy(bool is_tdp) {
               XML->sys.core[ithCore].fp_rename_writes;
           fFRAT->rtp_stats = fFRAT->stats_t;
         }
-        else if ((coredynp.rm_ty == CAMbased)) {
+        else if (coredynp.rm_ty == CAMbased) {
           iFRAT->stats_t.readAc.access = XML->sys.core[ithCore].rename_reads;
           iFRAT->stats_t.writeAc.access = XML->sys.core[ithCore].rename_writes;
           iFRAT->rtp_stats = iFRAT->stats_t;
@@ -3184,7 +3186,7 @@ void RENAMINGU::computeEnergy(bool is_tdp) {
           // XML->sys.core[ithCore].committed_fp_instructions;
           fFRAT->rtp_stats = fFRAT->stats_t;
         }
-        else if ((coredynp.rm_ty == CAMbased)) {
+        else if (coredynp.rm_ty == CAMbased) {
           iFRAT->stats_t.readAc.access = XML->sys.core[ithCore].rename_reads;
           iFRAT->stats_t.writeAc.access = XML->sys.core[ithCore].rename_writes;
           iFRAT->rtp_stats = iFRAT->stats_t;
@@ -3263,7 +3265,7 @@ void RENAMINGU::computeEnergy(bool is_tdp) {
              fFRAT->stats_t.writeAc.access *
                  fFRAT->local_result.power.writeOp.dynamic);
       }
-      else if ((coredynp.rm_ty == CAMbased)) {
+      else if (coredynp.rm_ty == CAMbased) {
         iFRAT->power_t.reset();
         fFRAT->power_t.reset();
         iFRAT->power_t.readOp.dynamic +=
@@ -3326,7 +3328,7 @@ void RENAMINGU::computeEnergy(bool is_tdp) {
              fFRAT->stats_t.writeAc.access *
                  fFRAT->local_result.power.writeOp.dynamic);
       }
-      else if ((coredynp.rm_ty == CAMbased)) {
+      else if (coredynp.rm_ty == CAMbased) {
         iFRAT->power_t.reset();
         fFRAT->power_t.reset();
         iFRAT->power_t.readOp.dynamic +=
@@ -5412,7 +5414,9 @@ void Core::displayEnergy(uint32_t indent, int plevel, bool is_tdp) {
     // undiffCore->area.get_area()*1e-6<< " mm^2" << endl;
     //				cout << indent_str_next << "Peak Dynamic = " <<
     // undiffCore->power.readOp.dynamic*clockRate << " W" << endl;
-    ////				cout << indent_str_next << "Subthreshold Leakage =
+    ////				cout << indent_str_next << "Subthreshold
+    /// Leakage
+    ///=
     ///"
     ///<<  undiffCore->power.readOp.leakage <<" W" << endl;
     //				cout << indent_str_next << "Subthreshold Leakage
@@ -5424,7 +5428,9 @@ void Core::displayEnergy(uint32_t indent, int plevel, bool is_tdp) {
     //<< " W" << endl;
     //				cout << indent_str_next << "Gate Leakage = " <<
     // undiffCore->power.readOp.gate_leakage << " W" << endl;
-    //				//		cout << indent_str_next << "Runtime Dynamic =
+    //				//		cout << indent_str_next <<
+    //"Runtime  Dynamic
+    //=
     //"
     //<<  undiffCore->rt_power.readOp.dynamic/executionTime << " W" << endl;
     //				cout <<endl;
@@ -5435,13 +5441,15 @@ void Core::displayEnergy(uint32_t indent, int plevel, bool is_tdp) {
     }
   }
   else {
-    //		cout << indent_str_next << "Instruction Fetch Unit    Peak Dynamic
+    //		cout << indent_str_next << "Instruction Fetch Unit    Peak
+    // Dynamic
     //=
     //"
     //<< ifu->rt_power.readOp.dynamic*clockRate << " W" << endl;
     //		cout << indent_str_next << "Instruction Fetch Unit Subthreshold
     // Leakage = " << ifu->rt_power.readOp.leakage <<" W" << endl;
-    //		cout << indent_str_next << "Instruction Fetch Unit    Gate Leakage
+    //		cout << indent_str_next << "Instruction Fetch Unit    Gate
+    // Leakage
     //=
     //"
     //<< ifu->rt_power.readOp.gate_leakage << " W" << endl; 		cout <<
@@ -5802,7 +5810,7 @@ void Core::set_core_param() {
   coredynp.FPU_cdb_duty_cycle = XML->sys.core[ithCore].FPU_cdb_duty_cycle;
   //	}
 
-  if (!((coredynp.core_ty == OOO) || (coredynp.core_ty == Inorder))) {
+  if (!(coredynp.core_ty == OOO) || (coredynp.core_ty == Inorder)) {
     cout << "Invalid Core Type" << endl;
     exit(0);
   }
@@ -5817,7 +5825,7 @@ void Core::set_core_param() {
     exit(0);
   }
 
-  if (!((coredynp.rm_ty == RAMbased) || (coredynp.rm_ty == CAMbased))) {
+  if (!(coredynp.rm_ty == RAMbased) || (coredynp.rm_ty == CAMbased)) {
     cout << "Invalid OOO Renaming Type" << endl;
     exit(0);
   }

@@ -45,6 +45,7 @@
 #include <iostream>
 
 using namespace std;
+using namespace cacti;
 
 bool mem_array::lt(const mem_array *m1, const mem_array *m2) {
   if (m1->Nspd < m2->Nspd)

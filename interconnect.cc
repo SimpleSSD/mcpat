@@ -32,8 +32,8 @@
 #include "interconnect.h"
 #include <assert.h>
 #include <iostream>
+#include "cacti/wire.h"
 #include "globalvar.h"
-#include "wire.h"
 
 interconnect::interconnect(string name_, enum Device_ty device_ty_,
                            double base_w, double base_h, int data_w, double len,

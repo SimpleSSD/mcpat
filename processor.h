@@ -33,17 +33,17 @@
 
 #include <vector>
 #include "XML_Parse.h"
-#include "arbiter.h"
-#include "area.h"
 #include "array.h"
 #include "basic_components.h"
+#include "cacti/arbiter.h"
+#include "cacti/area.h"
+#include "cacti/decoder.h"
+#include "cacti/parameter.h"
+#include "cacti/router.h"
 #include "core.h"
-#include "decoder.h"
 #include "iocontrollers.h"
 #include "memoryctrl.h"
 #include "noc.h"
-#include "parameter.h"
-#include "router.h"
 #include "sharedcache.h"
 
 struct Energy {
@@ -56,6 +56,7 @@ struct Energy {
   } core;
   double l3;
 };
+using namespace cacti;
 
 class Processor : public Component {
  public:

@@ -40,6 +40,8 @@
 #include "component.h"
 #include "parameter.h"
 
+namespace cacti {
+
 class Wire : public Component {
  public:
   Wire(enum Wire_type wire_model, double len /* in u*/,
@@ -114,5 +116,7 @@ class Wire : public Component {
 
   TechnologyParameter::DeviceType *deviceType;
 };
+
+}  // namespace cacti
 
 #endif

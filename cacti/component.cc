@@ -38,6 +38,7 @@
 #include "decoder.h"
 
 using namespace std;
+using namespace cacti;
 
 Component::Component() : area(), power(), rt_power(), delay(0) {}
 

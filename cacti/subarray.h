@@ -38,6 +38,8 @@
 
 using namespace std;
 
+namespace cacti {
+
 class Subarray : public Component {
  public:
   Subarray(const DynamicParameter &dp, bool is_fa_);
@@ -59,5 +61,7 @@ class Subarray : public Component {
  private:
   void compute_C();  // compute bitline and wordline capacitance
 };
+
+}  // namespace cacti
 
 #endif

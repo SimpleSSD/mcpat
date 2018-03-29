@@ -37,6 +37,8 @@
 
 using namespace std;
 
+namespace cacti {
+
 class Area {
  public:
   double w;
@@ -60,5 +62,7 @@ class Area {
  private:
   double area;
 };
+
+}  // namespace cacti
 
 #endif

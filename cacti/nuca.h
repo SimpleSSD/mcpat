@@ -43,6 +43,8 @@
 #include "router.h"
 #include "wire.h"
 
+namespace cacti {
+
 class nuca_org_t {
  public:
   ~nuca_org_t();
@@ -86,5 +88,7 @@ class Nuca : public Component {
   int wt_min, wt_max;
   Wire *wire_vertical[WIRE_TYPES], *wire_horizontal[WIRE_TYPES];
 };
+
+}  // namespace cacti
 
 #endif

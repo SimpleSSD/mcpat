@@ -33,6 +33,7 @@
 
 #define ASPECT_THRESHOLD .8
 #define ADJ 1
+using namespace cacti;
 
 Crossbar::Crossbar(double n_inp_, double n_out_, double flit_size_,
                    TechnologyParameter::DeviceType *dt)

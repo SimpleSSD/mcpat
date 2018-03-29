@@ -35,12 +35,12 @@
 #include <iostream>
 #include <string>
 #include "XML_Parse.h"
-#include "basic_circuit.h"
 #include "basic_components.h"
-#include "const.h"
-#include "io.h"
+#include "cacti/basic_circuit.h"
+#include "cacti/const.h"
+#include "cacti/io.h"
+#include "cacti/parameter.h"
 #include "logic.h"
-#include "parameter.h"
 
 /* overview of MC models:
  * McPAT memory controllers are modeled according to large number of industrial
@@ -228,7 +228,11 @@ void MCPHY::compute() {
    * memory interfaces ," ISSCC 2006; From Cadence ChipEstimator for normal I/O
    * around 0.4~0.8 mW/Gb/s
    */
-  double power_per_gb_per_s, phy_dyn, phy_gates, NMOS_sizing, PMOS_sizing;
+  double power_per_gb_per_s;
+  // double phy_dyn;
+  double phy_gates;
+  double NMOS_sizing;
+  double PMOS_sizing;
 
   if (mc_type == MC) {
     if (mcp.type == 0) {

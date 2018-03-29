@@ -68,17 +68,10 @@ const int opt_area = 0;
 const int interconnect_projection_type = 0;
 
 //******************************Core Parameters
-#if (inorder)
-const int opcode_length = 8;        // Niagara
-const int reg_length = 5;           // Niagara
-const int instruction_length = 32;  // Niagara
-const int data_width = 64;
-#else
 const int opcode_length = 8;        // 16;//Niagara
 const int reg_length = 7;           // Niagara
 const int instruction_length = 32;  // Niagara
 const int data_width = 64;
-#endif
 
 // Caches
 // itlb

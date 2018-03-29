@@ -37,6 +37,8 @@
 #include "const.h"
 #include "io.h"
 
+namespace cacti {
+
 // parameters which are functions of certain device technology
 class TechnologyParameter {
  public:
@@ -383,5 +385,7 @@ class DynamicParameter {
 
 extern InputParameter *g_ip;
 extern TechnologyParameter g_tp;
+
+}  // namespace cacti
 
 #endif

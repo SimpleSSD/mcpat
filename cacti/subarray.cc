@@ -34,6 +34,7 @@
 #include <iostream>
 
 #include "subarray.h"
+using namespace cacti;
 
 Subarray::Subarray(const DynamicParameter &dp_, bool is_fa_)
     : dp(dp_),

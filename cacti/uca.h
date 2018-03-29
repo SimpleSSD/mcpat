@@ -38,6 +38,8 @@
 #include "htree2.h"
 #include "parameter.h"
 
+namespace cacti {
+
 class UCA : public Component {
  public:
   UCA(const DynamicParameter &dyn_p);
@@ -89,5 +91,7 @@ class UCA : public Component {
   double long_channel_leakage_reduction_periperal;
   double long_channel_leakage_reduction_memcell;
 };
+
+}  // namespace cacti
 
 #endif

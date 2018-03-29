@@ -37,9 +37,12 @@
 #include "parameter.h"
 
 using namespace std;
+using namespace cacti;
 
+namespace cacti {
 InputParameter *g_ip;
 TechnologyParameter g_tp;
+}  // namespace cacti
 
 void TechnologyParameter::DeviceType::display(uint32_t indent) {
   string indent_str(indent, ' ');

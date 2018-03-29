@@ -35,10 +35,12 @@
 #include "XML_Parse.h"
 #include "array.h"
 #include "basic_components.h"
+#include "cacti/parameter.h"
 #include "interconnect.h"
 #include "logic.h"
-#include "parameter.h"
 #include "sharedcache.h"
+
+using namespace cacti;
 
 class BranchPredictor : public Component {
  public:

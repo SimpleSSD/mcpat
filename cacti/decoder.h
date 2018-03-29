@@ -40,6 +40,8 @@
 
 using namespace std;
 
+namespace cacti {
+
 class Decoder : public Component {
  public:
   Decoder(int _num_dec_signals, bool flag_way_select, double _C_ld_dec_out,
@@ -236,5 +238,7 @@ class Driver : public Component {
       delete sleeptx;
   };
 };
+
+}  // namespace cacti
 
 #endif

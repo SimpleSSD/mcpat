@@ -33,6 +33,7 @@
 #include <iostream>
 
 #include "uca.h"
+using namespace cacti;
 
 UCA::UCA(const DynamicParameter &dyn_p)
     : dp(dyn_p), bank(dp), nbanks(g_ip->nbanks), refresh_power(0) {
@@ -230,11 +231,11 @@ double UCA::compute_delays(double inrisetime) {
     precharge_delay = 0;
   }
 
-  double dram_array_availability = 0;
-  if (dp.is_dram) {
-    dram_array_availability =
-        (1 - dp.num_r_subarray * cycle_time / dp.dram_refresh_period) * 100;
-  }
+  // double dram_array_availability = 0;
+  // if (dp.is_dram) {
+  //   dram_array_availability =
+  //       (1 - dp.num_r_subarray * cycle_time / dp.dram_refresh_period) * 100;
+  // }
 
   return outrisetime;
 }

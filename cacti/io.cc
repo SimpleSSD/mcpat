@@ -47,6 +47,8 @@
 
 using namespace std;
 
+namespace cacti {
+
 InputParameter::InputParameter()
     : array_power_gated(false),
       bitline_floating(false),
@@ -1798,8 +1800,8 @@ void output_UCA(uca_org_t *fr) {
              0.2 * fr->data_array2
                        ->long_channel_leakage_reduction_periperal);  // TODO
   double areaoverhead, overhead_data, overhead_tag;
-  double wakeup_E, wakeup_T, wakeup_E_data, wakeup_T_data, wakeup_E_tag,
-      wakeup_T_tag;
+  double wakeup_E, wakeup_T, wakeup_E_data, wakeup_T_data = 0., wakeup_E_tag,
+                                            wakeup_T_tag = 0.;
   int dvs_levels = g_ip->dvs_voltage.size();
   int i;
   bool dvs = !g_ip->dvs_voltage.empty();
@@ -3962,3 +3964,5 @@ void reconfigure(InputParameter *local_interface, uca_org_t *fin_res) {
   // This corresponds to solve() in the initialization process.
   update_dvs(fin_res);
 }
+
+}  // namespace cacti
