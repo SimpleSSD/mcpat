@@ -44,7 +44,6 @@
 #include "const.h"
 #include "decoder.h"
 #include "parameter.h"
-#include "xmlParser.h"
 
 using namespace std;
 
