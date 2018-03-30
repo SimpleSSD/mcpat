@@ -535,7 +535,6 @@ void Processor::compute() {
 void Processor::getEnergy(Energy *ptr) {
   if (ptr) {
     bool long_channel = XML->sys.longer_channel_device;
-    bool power_gating = XML->sys.power_gating;
 
     // Core power
     if (numCore > 0) {
@@ -549,33 +548,31 @@ void Processor::getEnergy(Energy *ptr) {
       ptr->dcache = 0.;
 
       for (int i = 0; i < numCore; i++) {
-        if (power_gating) {
-          if (cores[i]->ifu->exist) {
-            ptr->icache +=
-                (long_channel
-                     ? cores[i]->ifu->power.readOp.longer_channel_leakage +
-                           cores[i]
-                               ->ifu->icache.power.readOp.longer_channel_leakage
-                     : cores[i]->ifu->power.readOp.leakage +
-                           cores[i]->ifu->icache.power.readOp.leakage);
-            ptr->icache += cores[i]->ifu->power.readOp.gate_leakage;
-            ptr->icache += cores[i]->ifu->icache.power.readOp.gate_leakage;
-            ptr->icache += cores[i]->ifu->rt_power.readOp.dynamic;
-            ptr->icache += cores[i]->ifu->icache.rt_power.readOp.dynamic;
-          }
-          if (cores[i]->lsu->exist) {
-            ptr->dcache +=
-                (long_channel
-                     ? cores[i]->lsu->power.readOp.longer_channel_leakage +
-                           cores[i]
-                               ->lsu->dcache.power.readOp.longer_channel_leakage
-                     : cores[i]->lsu->power.readOp.leakage +
-                           cores[i]->lsu->dcache.power.readOp.leakage);
-            ptr->dcache += cores[i]->lsu->power.readOp.gate_leakage;
-            ptr->dcache += cores[i]->lsu->dcache.power.readOp.gate_leakage;
-            ptr->dcache += cores[i]->lsu->rt_power.readOp.dynamic;
-            ptr->dcache += cores[i]->lsu->dcache.rt_power.readOp.dynamic;
-          }
+        if (cores[i]->ifu->exist) {
+          ptr->icache +=
+              (long_channel
+                   ? cores[i]->ifu->power.readOp.longer_channel_leakage +
+                         cores[i]
+                             ->ifu->icache.power.readOp.longer_channel_leakage
+                   : cores[i]->ifu->power.readOp.leakage +
+                         cores[i]->ifu->icache.power.readOp.leakage);
+          ptr->icache += cores[i]->ifu->power.readOp.gate_leakage;
+          ptr->icache += cores[i]->ifu->icache.power.readOp.gate_leakage;
+          ptr->icache += cores[i]->ifu->rt_power.readOp.dynamic;
+          ptr->icache += cores[i]->ifu->icache.rt_power.readOp.dynamic;
+        }
+        if (cores[i]->lsu->exist) {
+          ptr->dcache +=
+              (long_channel
+                   ? cores[i]->lsu->power.readOp.longer_channel_leakage +
+                         cores[i]
+                             ->lsu->dcache.power.readOp.longer_channel_leakage
+                   : cores[i]->lsu->power.readOp.leakage +
+                         cores[i]->lsu->dcache.power.readOp.leakage);
+          ptr->dcache += cores[i]->lsu->power.readOp.gate_leakage;
+          ptr->dcache += cores[i]->lsu->dcache.power.readOp.gate_leakage;
+          ptr->dcache += cores[i]->lsu->rt_power.readOp.dynamic;
+          ptr->dcache += cores[i]->lsu->dcache.rt_power.readOp.dynamic;
         }
       }
     }
