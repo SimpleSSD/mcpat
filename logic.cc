@@ -508,17 +508,12 @@ void Pipeline::compute_stage_vector() {
                                                                    // passed
       /* pipe stage MEM/WB; result data, writeback regs */
       num_piperegs +=
-          coredynp.issueW *
-          (coredynp.int_data_width +
-           coredynp
-               .phy_ireg_width /* powers (2,opcode_length) + (2,opcode_length)+2*powers (2,reg_length)*/);
+          coredynp.issueW * (coredynp.int_data_width + coredynp.phy_ireg_width /* powers (2,opcode_length) + (2,opcode_length)+2*powers (2,reg_length)*/);
       /* pipe stage WB/CM ; result data, regs need to be updated, address for
        * resolve memory ops in ROB's top*/
       num_piperegs +=
           coredynp.commitW *
-          (coredynp.int_data_width + coredynp.v_address_width +
-           coredynp
-               .phy_ireg_width /*+ powers (2,opcode_length)*2*powers (2,reg_length)*/) *
+          (coredynp.int_data_width + coredynp.v_address_width + coredynp.phy_ireg_width /*+ powers (2,opcode_length)*2*powers (2,reg_length)*/) *
           coredynp.num_hthreads;
       //		if (multithreaded)
       //		{

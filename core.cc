@@ -200,11 +200,10 @@ InstFetchU::InstFetchU(ParseXML *XML_interface, int ithCore_,
   // output_data_csv(icache.ifb.local_result);
 
   // prefetch buffer
-  tag =
-      XML->sys.physical_address_width + EXTRA_TAG_BITS;  // check with
-                                                         // previous entries to
-                                                         // decide wthether to
-                                                         // merge.
+  tag = XML->sys.physical_address_width + EXTRA_TAG_BITS;  // check with
+                                                           // previous entries
+                                                           // to decide wthether
+                                                           // to merge.
   data = icache.caches->l_ip
              .line_sz;  // separate queue to prevent from cache polution.
   interface_ip.specific_tag = 1;
@@ -1029,11 +1028,10 @@ LoadStoreU::LoadStoreU(ParseXML *XML_interface, int ithCore_,
   // output_data_csv(dcache.ifb.local_result);
 
   // prefetch buffer
-  tag =
-      XML->sys.physical_address_width + EXTRA_TAG_BITS;  // check with
-                                                         // previous entries to
-                                                         // decide wthether to
-                                                         // merge.
+  tag = XML->sys.physical_address_width + EXTRA_TAG_BITS;  // check with
+                                                           // previous entries
+                                                           // to decide wthether
+                                                           // to merge.
   data = dcache.caches->l_ip
              .line_sz;  // separate queue to prevent from cache polution.
   interface_ip.specific_tag = 1;
@@ -4898,12 +4896,11 @@ void EXECU::computeEnergy(bool is_tdp) {
     bypass.rt_power = bypass.rt_power + int_bypass->power * pppm_t;
 
     if (coredynp.num_muls > 0) {
-      set_pppm(
-          pppm_t, XML->sys.core[ithCore].cdb_mul_accesses, 2, 2,
-          XML->sys.core[ithCore].cdb_mul_accesses);  // 2 means two source
-                                                     // operands needs to be
-                                                     // passed for each int
-                                                     // instruction.
+      set_pppm(pppm_t, XML->sys.core[ithCore].cdb_mul_accesses, 2, 2,
+               XML->sys.core[ithCore].cdb_mul_accesses);  // 2 means two source
+                                                          // operands needs to
+                                                          // be passed for each
+                                                          // int instruction.
       bypass.rt_power = bypass.rt_power + intTag_mul_Bypass->power * pppm_t +
                         int_mul_bypass->power * pppm_t;
       rt_power = rt_power + mul->rt_power;

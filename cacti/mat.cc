@@ -371,11 +371,10 @@ Mat::Mat(const DynamicParameter &dyn_p)
     c_wakeup_array +=
         2 * drain_C_(g_tp.sram.cell_pmos_w, PCH, 1, 1, cell.h, is_dram, true) +
         drain_C_(g_tp.sram.cell_nmos_w, NCH, 1, 1, cell.h, is_dram,
-                 true);  // 1 inv
-    c_wakeup_array *=
-        subarray.num_rows;  // all the SRAM cells in a bitline is
-                            // connected to the sleep tx to provide
-                            // Vcc_min
+                 true);                   // 1 inv
+    c_wakeup_array *= subarray.num_rows;  // all the SRAM cells in a bitline is
+                                          // connected to the sleep tx to
+                                          // provide Vcc_min
     detalV_array = g_tp.sram_cell.Vdd - g_tp.sram_cell.Vcc_min;
 
     sram_sleep_tx = new Sleep_tx(g_ip->perfloss, Isat_subarray, is_footer,
@@ -1412,7 +1411,8 @@ double Mat::compute_bitline_delay(double inrisetime) {
                                C_drain_sense_amp_mux);
       dynRdEnergy += (C_bl + 2 * C_drain_bit_mux) * 2 * dp.V_b_sense *
                      g_tp.sram_cell.Vdd /*
-        subarray.num_cols * num_subarrays_per_mat*/;
+        subarray.num_cols * num_subarrays_per_mat*/
+          ;
       blfloating_c += (C_bl + 2 * C_drain_bit_mux) * 2;
       dynRdEnergy +=
           (2 * C_drain_sense_amp_iso + C_sense_amp_latch +
@@ -1585,7 +1585,8 @@ double Mat::compute_sa_delay(double inrisetime) {
   // extra latency (percentage wise) when vdd increases.
   power_sa.readOp.dynamic =
       C_ld * g_tp.peri_global.Vdd * g_tp.peri_global.Vdd /* num_sa_subarray
-                            num_subarrays_per_mat * num_act_mats_hor_dir*/;
+                            num_subarrays_per_mat * num_act_mats_hor_dir*/
+      ;
   power_sa.readOp.leakage = lkgIdle * g_tp.peri_global.Vdd;
   power_sa.readOp.power_gated_leakage = lkgIdle * g_tp.peri_global.Vcc_min;
 

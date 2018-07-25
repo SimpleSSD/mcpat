@@ -126,12 +126,11 @@ Processor::Processor(ParseXML *XML_interface)
         if (procdynp.homoL2) {
           l2.area.set_area(l2.area.get_area() +
                            l2array[i]->area.get_area() * procdynp.numL2);
-          area.set_area(
-              area.get_area() +
-              l2.area.get_area());  // placement and routing overhead
-                                    // is 10%, l2 scales worse than
-                                    // cache 40% is accumulated from 90
-                                    // to 22nm
+          area.set_area(area.get_area() +
+                        l2.area.get_area());  // placement and routing overhead
+                                              // is 10%, l2 scales worse than
+                                              // cache 40% is accumulated from
+                                              // 90 to 22nm
         }
         else {
           l2.area.set_area(l2.area.get_area() + l2array[i]->area.get_area());
@@ -174,12 +173,11 @@ Processor::Processor(ParseXML *XML_interface)
       if (procdynp.homoL1Dir) {
         l1dir.area.set_area(l1dir.area.get_area() +
                             l1dirarray[i]->area.get_area() * procdynp.numL1Dir);
-        area.set_area(
-            area.get_area() +
-            l1dir.area.get_area());  // placement and routing overhead
-                                     // is 10%, l1dir scales worse than
-                                     // cache 40% is accumulated from
-                                     // 90 to 22nm
+        area.set_area(area.get_area() +
+                      l1dir.area.get_area());  // placement and routing overhead
+                                               // is 10%, l1dir scales worse
+                                               // than cache 40% is accumulated
+                                               // from 90 to 22nm
         power = power + l1dir.power;
         rt_power = rt_power + l1dir.rt_power;
       }
@@ -196,12 +194,11 @@ Processor::Processor(ParseXML *XML_interface)
       if (procdynp.homoL2Dir) {
         l2dir.area.set_area(l2dir.area.get_area() +
                             l2dirarray[i]->area.get_area() * procdynp.numL2Dir);
-        area.set_area(
-            area.get_area() +
-            l2dir.area.get_area());  // placement and routing overhead
-                                     // is 10%, l2dir scales worse than
-                                     // cache 40% is accumulated from
-                                     // 90 to 22nm
+        area.set_area(area.get_area() +
+                      l2dir.area.get_area());  // placement and routing overhead
+                                               // is 10%, l2dir scales worse
+                                               // than cache 40% is accumulated
+                                               // from 90 to 22nm
       }
       else {
         l2dir.area.set_area(l2dir.area.get_area() +

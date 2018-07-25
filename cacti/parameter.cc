@@ -511,11 +511,10 @@ DynamicParameter::DynamicParameter(bool is_tag_, int pure_ram_, int pure_cam_,
     }
   }
   else {
-    c_b_metal =
-        cam_cell.h * wire_local.C_per_um;  // IBM and SUN design, SRAM
-                                           // array uses dummy cells to
-                                           // fill the blank space due to
-                                           // mismatch on CAM-RAM
+    c_b_metal = cam_cell.h * wire_local.C_per_um;  // IBM and SUN design, SRAM
+                                                   // array uses dummy cells to
+                                                   // fill the blank space due
+                                                   // to mismatch on CAM-RAM
     V_b_sense = (0.05 * g_tp.sram_cell.Vdd > VBITSENSEMIN)
                     ? 0.05 * g_tp.sram_cell.Vdd
                     : VBITSENSEMIN;
