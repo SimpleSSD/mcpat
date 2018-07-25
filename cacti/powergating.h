@@ -72,7 +72,7 @@ class Sleep_tx : public Component {
   //	void   compute_area();
   double compute_penalty();  // return outrisetime
 
-  void leakage_feedback(double temperature){};
+  void leakage_feedback(double){};
   ~Sleep_tx(){};
 };
 
