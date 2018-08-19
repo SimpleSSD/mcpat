@@ -165,7 +165,7 @@ void Crossbar::compute_power() {
                    deviceType->Vth / deviceType->Vdd,
                    deviceType->Vth / deviceType->Vdd, RISE);
 
-  Wire wreset();
+  // Wire wreset();
 }
 
 void Crossbar::print_crossbar() {

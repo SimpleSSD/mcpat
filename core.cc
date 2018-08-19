@@ -62,7 +62,7 @@ InstFetchU::InstFetchU(ParseXML *XML_interface, int ithCore_,
 
   clockRate = coredynp.clockRate;
   executionTime = coredynp.executionTime;
-  cache_p = (Cache_policy)XML->sys.core[ithCore].icache.icache_config[7];
+  cache_p = (Cache_policy)(int)XML->sys.core[ithCore].icache.icache_config[7];
   // Assuming all L1 caches are virtually idxed physically tagged.
   // cache
 
@@ -905,7 +905,7 @@ LoadStoreU::LoadStoreU(ParseXML *XML_interface, int ithCore_,
 
   clockRate = coredynp.clockRate;
   executionTime = coredynp.executionTime;
-  cache_p = (Cache_policy)XML->sys.core[ithCore].dcache.dcache_config[7];
+  cache_p = (Cache_policy)(int)XML->sys.core[ithCore].dcache.dcache_config[7];
 
   interface_ip.num_search_ports = XML->sys.core[ithCore].memory_ports;
   interface_ip.is_cache = true;

@@ -33,7 +33,12 @@ include_directories(
 # Platform specific settings
 if (MSVC)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-  add_compile_options(/wd4819)
+  add_compile_options(/wd4819)  # Surpress unicode warning
+  add_compile_options(/wd4305)  # Surpress truncation warning
+  add_compile_options(/wd4800)  # Surpress int -> boolean waring
+  add_compile_options(/wd4129)  # Surpress escape warning
+  add_compile_options(/wd4244)  # Surpress conversion warning
+  add_compile_options(/wd4267)  # Surpress conversion warning
 else ()
   if (DEBUG_BUILD)
     set(CMAKE_CXX_FLAGS
