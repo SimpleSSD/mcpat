@@ -113,7 +113,7 @@ struct calc_time_mt_wrapper_struct {
   list<mem_array *> tag_arr;
 };
 
-void *calc_time_mt_wrapper(void *void_obj);
+void calc_time_mt_wrapper(void *void_obj);
 
 }  // namespace cacti
 

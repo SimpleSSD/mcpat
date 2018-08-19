@@ -43,7 +43,7 @@
 #include "subarray.h"
 #include "uca.h"
 
-#include <pthread.h>
+#include <thread>
 #include <algorithm>
 #include <iostream>
 #include <list>
@@ -105,7 +105,7 @@ void min_values_t::update_min_values(const mem_array *res) {
   min_cyc = (min_cyc > res->cycle_time) ? res->cycle_time : min_cyc;
 }
 
-void *calc_time_mt_wrapper(void *void_obj) {
+void calc_time_mt_wrapper(void *void_obj) {
   calc_time_mt_wrapper_struct *calc_obj =
       (calc_time_mt_wrapper_struct *)void_obj;
   uint32_t tid = calc_obj->tid;
@@ -223,8 +223,6 @@ void *calc_time_mt_wrapper(void *void_obj) {
   delete tag_arr.back();
   data_arr.pop_back();
   tag_arr.pop_back();
-
-  pthread_exit(NULL);
 }
 
 bool calculate_time(bool is_tag, int pure_ram, bool pure_cam, double Nspd,
@@ -759,7 +757,7 @@ void solve(uca_org_t *fin_res) {
   // distribute calculate_time() execution to multiple threads
   calc_time_mt_wrapper_struct *calc_array =
       new calc_time_mt_wrapper_struct[nthreads];
-  pthread_t threads[nthreads];
+  std::thread threads[nthreads];
 
   for (uint32_t t = 0; t < nthreads; t++) {
     calc_array[t].tid = t;
@@ -786,12 +784,11 @@ void solve(uca_org_t *fin_res) {
       calc_array[t].is_tag = is_tag;
       calc_array[t].is_main_mem = false;
       calc_array[t].Nspd_min = 0.125;
-      pthread_create(&threads[t], NULL, calc_time_mt_wrapper,
-                     (void *)(&(calc_array[t])));
+      threads[t] = std::thread(calc_time_mt_wrapper,(void *)(&(calc_array[t])));
     }
 
     for (uint32_t t = 0; t < nthreads; t++) {
-      pthread_join(threads[t], NULL);
+      threads[t].join();
     }
 
     for (uint32_t t = 0; t < nthreads; t++) {
@@ -824,12 +821,11 @@ void solve(uca_org_t *fin_res) {
       calc_array[t].Nspd_min = 1;
     }
 
-    pthread_create(&threads[t], NULL, calc_time_mt_wrapper,
-                   (void *)(&(calc_array[t])));
+    threads[t] = std::thread(calc_time_mt_wrapper,(void *)(&(calc_array[t])));
   }
 
   for (uint32_t t = 0; t < nthreads; t++) {
-    pthread_join(threads[t], NULL);
+    threads[t].join();
   }
 
   data_arr.clear();

@@ -40,7 +40,6 @@
 #include "const.h"
 #include "parameter.h"
 
-#include <pthread.h>
 #include <algorithm>
 #include <iostream>
 
