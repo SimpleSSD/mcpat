@@ -23,9 +23,9 @@ McPAT::McPAT(ParseXML *c) : setting(c) {}
 
 McPAT::~McPAT() {}
 
-void McPAT::getEnergy(Energy &energy) {
+void McPAT::getPower(Power &power) {
   Processor proc(setting);
 
   proc.compute();
-  proc.getEnergy(&energy);
+  proc.getPower(&power);
 }

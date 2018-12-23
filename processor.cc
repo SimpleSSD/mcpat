@@ -529,65 +529,36 @@ void Processor::compute() {
   //  final nodes globalClock.optimize_wire();
 }
 
-void Processor::getEnergy(Energy *ptr) {
-  if (ptr) {
-    bool long_channel = XML->sys.longer_channel_device;
+void Processor::getPower(Power *value) {
+  if (value) {
+    value->core.area = core.area.get_area() * 1e-6;
+    value->core.peakDynamic = core.power.readOp.dynamic;
+    value->core.subthresholdLeakage =
+        long_channel ? core.power.readOp.longer_channel_leakage
+                     : core.power.readOp.leakage;
+    value->core.gateLeakage = core.power.readOp.gate_leakage;
+    value->core.runtimeDynamic = core.rt_power.readOp.dynamic;
 
-    // Core power
-    if (numCore > 0) {
-      ptr->core = (long_channel ? core.power.readOp.longer_channel_leakage
-                                : core.power.readOp.leakage);
-      ptr->core += core.power.readOp.gate_leakage;
-      ptr->core += core.rt_power.readOp.dynamic;
-
-      // L1i/L1d power
-      ptr->icache = 0.;
-      ptr->dcache = 0.;
-
-      for (int i = 0; i < numCore; i++) {
-        if (cores[i]->ifu->exist) {
-          ptr->icache +=
-              (long_channel
-                   ? cores[i]->ifu->power.readOp.longer_channel_leakage +
-                         cores[i]
-                             ->ifu->icache.power.readOp.longer_channel_leakage
-                   : cores[i]->ifu->power.readOp.leakage +
-                         cores[i]->ifu->icache.power.readOp.leakage);
-          ptr->icache += cores[i]->ifu->power.readOp.gate_leakage;
-          ptr->icache += cores[i]->ifu->icache.power.readOp.gate_leakage;
-          ptr->icache += cores[i]->ifu->rt_power.readOp.dynamic;
-          ptr->icache += cores[i]->ifu->icache.rt_power.readOp.dynamic;
-        }
-        if (cores[i]->lsu->exist) {
-          ptr->dcache +=
-              (long_channel
-                   ? cores[i]->lsu->power.readOp.longer_channel_leakage +
-                         cores[i]
-                             ->lsu->dcache.power.readOp.longer_channel_leakage
-                   : cores[i]->lsu->power.readOp.leakage +
-                         cores[i]->lsu->dcache.power.readOp.leakage);
-          ptr->dcache += cores[i]->lsu->power.readOp.gate_leakage;
-          ptr->dcache += cores[i]->lsu->dcache.power.readOp.gate_leakage;
-          ptr->dcache += cores[i]->lsu->rt_power.readOp.dynamic;
-          ptr->dcache += cores[i]->lsu->dcache.rt_power.readOp.dynamic;
-        }
+    if (!XML->sys.Private_L2) {
+      if (numL2 > 0) {
+        value->level2.area = l2.area.get_area() * 1e-6;
+        value->level2.peakDynamic = l2.power.readOp.dynamic;
+        value->level2.subthresholdLeakage =
+            long_channel ? l2.power.readOp.longer_channel_leakage
+                         : l2.power.readOp.leakage;
+        value->level2.gateLeakage = l2.power.readOp.gate_leakage;
+        value->level2.runtimeDynamic = l2.rt_power.readOp.dynamic;
       }
     }
 
-    // L2 power
-    if (!XML->sys.Private_L2 && numL2 > 0) {
-      ptr->l2 = (long_channel ? l2.power.readOp.longer_channel_leakage
-                              : l2.power.readOp.leakage);
-      ptr->l2 += l2.power.readOp.gate_leakage;
-      ptr->l2 += l2.rt_power.readOp.dynamic;
-    }
-
-    // L3 power
     if (numL3 > 0) {
-      ptr->l3 = (long_channel ? l3.power.readOp.longer_channel_leakage
-                              : l3.power.readOp.leakage);
-      ptr->l3 += l3.power.readOp.gate_leakage;
-      ptr->l3 += l3.rt_power.readOp.dynamic;
+      value->level3.area = l3.area.get_area() * 1e-6;
+      value->level3.peakDynamic = l3.power.readOp.dynamic;
+      value->level3.subthresholdLeakage =
+          long_channel ? l3.power.readOp.longer_channel_leakage
+                       : l3.power.readOp.leakage;
+      value->level3.gateLeakage = l3.power.readOp.gate_leakage;
+      value->level3.runtimeDynamic = l3.rt_power.readOp.dynamic;
     }
   }
 }

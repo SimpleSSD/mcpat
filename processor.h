@@ -46,15 +46,27 @@
 #include "noc.h"
 #include "sharedcache.h"
 
-struct Energy {
-  double core;
-  double icache;
-  double dcache;
-  double l2;
-  double l3;
+struct PowerGroup {
+  double area;                 // Unit: mm^2
+  double peakDynamic;          // Unit: W
+  double subthresholdLeakage;  // Unit: W
+  double gateLeakage;          // Unit: W
+  double runtimeDynamic;       // Unit: W
 
-  Energy() : core(0.), icache(0.), dcache(0.), l2(0.), l3(0.) {}
+  PowerGroup()
+      : area(0.0),
+        peakDynamic(0.0),
+        subthresholdLeakage(0.0),
+        gateLeakage(0.0),
+        runtimeDynamic(0.0) {}
 };
+
+struct Power {
+  PowerGroup core;  // Total cores including all per-core elements
+  PowerGroup level2;
+  PowerGroup level3;
+};
+
 using namespace cacti;
 
 class Processor : public Component {
@@ -80,7 +92,7 @@ class Processor : public Component {
   Processor(ParseXML *XML_interface);
   void compute();
   void set_proc_param();
-  void getEnergy(Energy *);
+  void getPower(Power *);
   void displayEnergy(uint32_t indent = 0, int plevel = 100, bool is_tdp = true);
   void displayDeviceType(int device_type_, uint32_t indent = 0);
   void displayInterconnectType(int interconnect_type_, uint32_t indent = 0);

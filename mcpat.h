@@ -33,7 +33,7 @@ class McPAT {
   McPAT(ParseXML *);
   ~McPAT();
 
-  void getEnergy(Energy &);
+  void getPower(Power &);
 };
 
 #endif
