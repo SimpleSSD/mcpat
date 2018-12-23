@@ -530,6 +530,8 @@ void Processor::compute() {
 }
 
 void Processor::getPower(Power *value) {
+  bool long_channel = XML->sys.longer_channel_device;
+
   if (value) {
     value->core.area = core.area.get_area() * 1e-6;
     value->core.peakDynamic = core.power.readOp.dynamic;
